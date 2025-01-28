@@ -1,11 +1,22 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
-import { Header,Footer } from './components'
+import { Navbar,Footer } from './components'
+import { doctors } from './assets/assets'
+import { useDispatch } from 'react-redux'
+import { setDoctors } from './store/doctorSlice'
 
 const App = () => {
+
+  const dispatch=useDispatch();
+
+  useEffect(()=>{
+    //api call will done here
+     dispatch(setDoctors({doctors}))
+  },[])
+
   return (
       <>
-        <Header/>
+        <Navbar/>
         <Outlet/>
         <Footer/>
       </>
