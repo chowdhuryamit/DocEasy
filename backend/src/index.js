@@ -3,11 +3,12 @@ import connectionDB from './db/index.js'
 import app from './app.js'
 
 dotenv.config()
+const port=process.env.PORT||7000
 
 connectionDB()
 .then(()=>{
-    app.listen(process.env.PORT||7000,()=>{
-        console.log(`server is running at port:${process.env.PORT}`);
+    app.listen(port,()=>{
+        console.log(`server is running at port:${port}`);
     })
 })
 .catch((error)=>{
