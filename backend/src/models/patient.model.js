@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 import jwt from 'jsonwebtoken'
-import bcrypt from bcrypt
+import bcrypt from 'bcrypt'
 
 const patientSchemma=new mongoose.Schema({
     name:{
@@ -11,7 +11,6 @@ const patientSchemma=new mongoose.Schema({
     },
     email:{
         type:String,
-        required:true,
         trim:true,
         lowercase:true
     },
@@ -21,7 +20,8 @@ const patientSchemma=new mongoose.Schema({
         trim:true,
     },
     phone:{
-        type:Number,
+        type:String,
+        required:true,
         trim:true
     },
     address:{
@@ -42,8 +42,8 @@ const patientSchemma=new mongoose.Schema({
 patientSchemma.pre("save",async function(next){
    if(this.isModified('password')){
     this.password=await bcrypt.hash(this.password,10);
-    next();
    }
+   next();
 })
 
 patientSchemma.methods.isPasswordCorrect=async function(password){
