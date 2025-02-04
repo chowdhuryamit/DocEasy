@@ -1,9 +1,13 @@
 import {Router} from 'express'
 import { upload } from "../middlewares/multer.middleware.js";
-import { registerPatient } from '../controllers/patient.controllers.js';
+import { getPatient, loginPatient, logoutPatient, registerPatient } from '../controllers/patient.controllers.js';
+import { verifyJWT } from '../middlewares/patient.middleware.js';
 
 const router=Router();
 
-router.post('/create-account',registerPatient);
+router.post('/create-account',upload.none(),registerPatient);//upload.none()->is apply to handle form data
+router.post('/login',upload.none(),loginPatient);
+router.post('/logout',verifyJWT,logoutPatient);
+router.get('/get-patient',verifyJWT,getPatient);
 
 export default router

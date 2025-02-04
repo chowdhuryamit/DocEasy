@@ -1,7 +1,6 @@
 import About from "./About";
 import Contact from "./Contact";
 import Doctors from "./Doctors";
-import Login from "./Login";
 import UserAppoinments from "./UserAppoinments";
 import UserProfile from "./UserProfile";
 import Home from "./Home";
@@ -12,7 +11,6 @@ export{
   About,
   Contact,
   Doctors,
-  Login,
   UserAppoinments,
   UserProfile,
   Home,

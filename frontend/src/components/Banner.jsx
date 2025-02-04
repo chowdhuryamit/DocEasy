@@ -14,7 +14,7 @@ const Banner = () => {
             <p>Book Your Appointment</p>
             <p className='mt-4'>With 100+ Trusted Doctors</p>
         </div>
-        <button onClick={() => { navigate('/login'); scrollTo(0, 0) }} className='bg-white text-sm sm:text-base text-[#595959] px-8 py-3 rounded-full mt-6 hover:scale-105 transition-all hover:font-bold'>Create account</button>
+        <button onClick={() => { navigate('/signup'); scrollTo(0, 0) }} className='bg-white text-sm sm:text-base text-[#595959] px-8 py-3 rounded-full mt-6 hover:scale-105 transition-all hover:font-bold'>Create account</button>
     </div>
 
     {/* ------- Right Side ------- */}
