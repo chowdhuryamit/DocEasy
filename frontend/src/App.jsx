@@ -20,23 +20,25 @@ const App = () => {
       
       if(patientData.data.success===false){
         dispatch(logout())
-      
         //api call will done here
-        dispatch(setDoctors({doctors}))
+       dispatch(setDoctors({doctors}))
       }
       else{
-        dispatch(login({userData:patientData.data.patientData}))
+        //api call will done here
         dispatch(setDoctors({doctors}))
+        dispatch(login({userData:patientData.data.patientData}))
       }
     })
     .catch((error)=>{
-      
-      dispatch(logout())
-      
       //api call will done here
-     dispatch(setDoctors({doctors}))
+      dispatch(setDoctors({doctors}))
+      dispatch(logout())
     })
-  },[])
+    .finally(()=>{
+       //api call will done here
+       dispatch(setDoctors({doctors}))
+    })
+  },[dispatch])
 
   return (
       <>

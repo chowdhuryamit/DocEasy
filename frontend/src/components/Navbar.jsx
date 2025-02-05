@@ -38,7 +38,7 @@ const Navbar = () => {
   return (
     <>
     <div className='flex items-center justify-between text-sm py-4 mb-5 border-b border-b-[#ADADAD]' id='navbar'>
-      <img src={assets.logo} alt='logo' className='w-44 cursor-pointer' to={'/'}/>
+      <img src={assets.logo} alt='logo' className='w-44 cursor-pointer' onClick={()=>navigate('/')}/>
       <ul className='md:flex items-start gap-8 font-medium hidden'>
         <NavLink to={'/'} className={({isActive}) =>`${isActive?'text-orange-500':'text-primary'} hover:text-orange-500 duration-300`}>
           <li className='py-1'>HOME</li>

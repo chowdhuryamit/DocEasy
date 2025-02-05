@@ -4,6 +4,7 @@ import Header from "./Header";
 import SpeacialityMenu from "./SpeacialityMenu";
 import TopDoctors from "./TopDoctors";
 import Banner from "./Banner";
+import RelatedDoctors from "./RelatedDoctors";
 
 export{
     Navbar,
@@ -11,5 +12,6 @@ export{
     Header,
     SpeacialityMenu,
     TopDoctors,
-    Banner
+    Banner,
+    RelatedDoctors
 }

@@ -107,7 +107,7 @@ export const assets = {
 
 export const speacialityData=[
     {
-        speaciality:"General_physician",
+        speaciality:"General physician",
         image:General_physician
     },
     {
@@ -119,7 +119,7 @@ export const speacialityData=[
         image:Gynecologist
     },
     {
-        speaciality:"Dermitologist",
+        speaciality:"Dermatologist",
         image:Dermatologist
     },
     {
@@ -355,6 +355,51 @@ export const doctors = [
         availability:true,
         address: {
             line1: '37th Cross, Richmond',
+            line2: 'Circle, Ring Road, London'
+        }
+    },
+    {
+        _id: 'doc16',
+        name: 'Dr. Sudip karmakar',
+        image: doc2,
+        speciality: 'Gastroenterologist',
+        degree: 'MBBS',
+        experience: '6 Years',
+        about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies. Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
+        fees: 100,
+        availability:true,
+        address: {
+            line1: '27th Cross, Richmond',
+            line2: 'Circle, Ring Road, London'
+        }
+    },
+    {
+        _id: 'doc17',
+        name: 'Dr. Bhola paul',
+        image: doc7,
+        speciality: 'Gastroenterologist',
+        degree: 'MBBS',
+        experience: '6 Years',
+        about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies. Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
+        fees: 120,
+        availability:true,
+        address: {
+            line1: '27th Cross, Richmond',
+            line2: 'Circle, Ring Road, London'
+        }
+    },
+    {
+        _id: 'doc18',
+        name: 'Dr. hritam datta',
+        image: doc4,
+        speciality: 'Gastroenterologist',
+        degree: 'MBBS',
+        experience: '6 Years',
+        about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies. Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
+        fees: 120,
+        availability:true,
+        address: {
+            line1: '27th Cross, Richmond',
             line2: 'Circle, Ring Road, London'
         }
     },
