@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux'
 import { setDoctors } from './store/doctorSlice.js'
 import axios from 'axios'
 import {login,logout} from './store/authSlice.js'
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {

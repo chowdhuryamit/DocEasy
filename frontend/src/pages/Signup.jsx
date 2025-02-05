@@ -39,8 +39,7 @@ const Signup = () => {
           setName('')
           setPhone('')
           setPassword('')
-          toast.error('network error.try again')
-          navigate('/signup')
+          toast.error('network error.try again');
         }
      }
      else{
