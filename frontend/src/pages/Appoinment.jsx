@@ -52,7 +52,7 @@ const Appoinment = () => {
             </div>
 
             <p className="text-gray-700 font-medium mt-4">
-              Appointment Fee:{"$"}
+              Appointment Fee : {" ₹ "} 
               <span className="text-gray-900 font-semibold">
                 {docInfo.fees}
               </span>
