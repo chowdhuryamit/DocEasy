@@ -1,22 +1,81 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { assets } from "../assets/assets";
 import { RelatedDoctors } from "../components/index.js";
+import { toast } from "react-toastify";
 
 const Appoinment = () => {
   const { docId } = useParams();
-  const [docInfo, setDocInfo] = useState(null);
+  const [docInfo, setDocInfo] = useState(null)
+  const [docSlots,setDocSlots]=useState([])
+  const [slotIndex, setSlotIndex]=useState(0);
+  const [slotTime,setSlotTime]=useState('');
+
   const doctors = useSelector((state) => state.doctorsList.doctors);
+  const authstatus= useSelector((state) =>state.auth.status)
+  const days=['SUN','MON','TUE','WED','THU','FRI','SAT']
+  const navigate=useNavigate()
 
   const fetchDocInfo = () => {
     const docInfo = doctors.find((doc) => doc._id === docId);
     setDocInfo(docInfo);
   };
 
+  const getAvailableSlots = async () => {
+    setDocSlots([]);
+
+    let today=new Date();
+
+    for(let i=0;i<7;i++){
+      let currDate=new Date(today)
+      currDate.setDate(today.getDate()+ i)
+
+      let endTime=new Date()
+      endTime.setDate(today.getDate() +i)
+      endTime.setHours(17,0,0,0)
+
+      if (today.getDate() === currDate.getDate()) {
+        currDate.setHours(currDate.getHours()>10?currDate.getHours()+1:10)
+        currDate.setMinutes(currDate.getMinutes()>30?30:0)
+      }
+      else{
+        currDate.setHours(10)
+        currDate.setMinutes(0)
+      }
+
+      let timeSlots=[]
+
+      while(currDate<=endTime){
+        let formattedTime=currDate.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})
+
+        timeSlots.push({
+          dateTime:new Date(currDate),
+          time:formattedTime
+        })
+
+        currDate.setMinutes(currDate.getMinutes()+30)
+      }
+      setDocSlots((prev)=>([...prev,timeSlots]))
+    }
+  }
+
+  const bookAppoinment= ()=>{
+     if(!authstatus){
+        toast.error('Please login to book an appoinment', {
+          onClose: () => navigate('/signup')
+        });
+     }
+  }
+
   useEffect(() => {
     fetchDocInfo();
   }, [doctors, docId]);
+
+  useEffect(()=>{
+    getAvailableSlots();
+  },[docInfo])
+
 
   if(docInfo==null) return <p className="text-center text-gray-600">Loading...</p>;
   return (
@@ -59,6 +118,31 @@ const Appoinment = () => {
             </p>
           </div>
         </div>
+
+
+        <div className='sm:ml-72 sm:pl-4 mt-8 font-medium text-[#565656]'>
+          <p>Book Your slots :</p>
+          <div className='flex gap-3 items-center w-full overflow-x-scroll mt-4'>
+            {
+              docSlots.length && docSlots.map((item,index) => (
+                <div onClick={()=>setSlotIndex(index)} key={index} className={`text-center py-6 min-w-16 rounded-full cursor-pointer ${slotIndex === index ? 'bg-primary text-white' : 'border border-[#DDDDDD]'}`}>
+                  <p>{item[0] && days[item[0].dateTime.getDay()]}</p>
+                  <p>{item[0] && item[0].dateTime.getDate()}</p>
+                </div>
+              ))
+            }
+          </div>
+          <div className='flex items-center gap-3 w-full overflow-x-scroll mt-10'>
+            {
+              docSlots.length && docSlots[slotIndex].map((item,index) => (
+                <p onClick={()=>setSlotTime(item.time)} key={index} className={`text-sm font-light  flex-shrink-0 px-5 py-2 rounded-full cursor-pointer ${item.time === slotTime ? 'bg-primary text-white' : 'text-[#949494] border border-[#B4B4B4]'}`}>{item.time.toLowerCase()}</p>
+              ))
+            }
+          </div>
+          <button onClick={bookAppoinment} className='bg-primary text-white text-sm font-light px-20 py-3 rounded-full mt-7'> Book an appoinment</button>
+        </div>
+        
+        
         <RelatedDoctors speciality={docInfo.speciality} docId={docId}/>
       </div>
   );

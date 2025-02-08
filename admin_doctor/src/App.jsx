@@ -1,6 +1,16 @@
 
 
 function App() {
+  const today=new Date();
+  for (let index = 0; index < 7; index++) {
+    const currDate=new Date(today+index)
+    console.log(currDate);
+    
+    
+    
+  }
+  
+  
   
   return (
     <>

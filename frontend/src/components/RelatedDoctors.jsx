@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 const RelatedDoctors = ({speciality,docId}) => {
     
@@ -27,7 +28,15 @@ const RelatedDoctors = ({speciality,docId}) => {
             <div className='w-full grid grid-cols-auto gap-4 pt-5 gap-y-6 px-3 sm:px-0 '>
             {
              relateddoctors.map((item,index)=>(
-               <div onClick={()=>item.availability? navigate(`/book-appoinments/${item._id}`):alert(`${item.name} is not available`)} className='border border-[#C9D8FF] rounded-xl overflow-hidden cursor-pointer hover:translate-y-[-10px] transition-all duration-500' key={index}>
+               <div onClick={()=>{
+                if(item.availability){
+                  navigate(`/book-appoinments/${item._id}`);
+                  scrollTo(0, 0)
+                }
+                else{
+                  toast.error(`${item.name} is not available`)
+                }
+               }} className='border border-[#C9D8FF] rounded-xl overflow-hidden cursor-pointer hover:translate-y-[-10px] transition-all duration-500' key={index}>
                     <img className='bg-[#EAEFFF]' src={item.image} alt="doctor_image" />
                     <div className='p-4'>
                        <div className={`flex items-center gap-2 text-sm text-center ${item.availability? 'text-green-500' :'text-gray-500'}`}>
