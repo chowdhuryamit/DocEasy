@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { assets } from '../assets/assets'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 
 const Navbar = () => {
   const navigate=useNavigate();
+  const [showmenu,setshowmenu]=useState(false)
   const authStatus=useSelector((state)=>state.auth.status);
   const patientData=useSelector((state)=>state.auth.userData);
   
@@ -67,7 +68,23 @@ const Navbar = () => {
             </div>
           </div>
         </div>
-        :<button onClick={()=>navigate('/signup')} className='bg-primary text-white font-bold px-8 py-3 rounded-full hidden md:block'>Create Account</button>}
+        :<button onClick={()=>navigate('/signup')} className='bg-primary text-white font-bold px-8 py-3 rounded-full hidden md:block'>Create Account</button>
+        }
+
+        
+        <img onClick={()=>setshowmenu(true)} className='w-6 md:hidden' src={assets.menu_icon} alt="menu_icon" />
+        <div className={`md:hidden ${showmenu ? 'fixed w-full' : 'h-0 w-0'} right-0 top-0 bottom-0 z-20 overflow-hidden bg-white transition-all`}>
+          <div className='flex items-center justify-between px-5 py-6'>
+             <img src={assets.logo} className='w-36' alt="logo" />
+             <img src={assets.cross_icon} alt="cross_icon" onClick={()=>setshowmenu(false)} className='w-7'/>
+          </div>
+          <ul className='flex flex-col items-center gap-2 mt-5 px-5 text-lg font-medium'>
+             <NavLink onClick={()=>setshowmenu(false)} to={'/'}><p className='px-4 py-2 rounded full inline-block'>Home</p></NavLink>
+             <NavLink onClick={()=>setshowmenu(false)} to={'/doctors'}><p className='px-4 py-2 rounded full inline-block'>All-Doctors</p></NavLink>
+             <NavLink onClick={()=>setshowmenu(false)} to={'/about'}><p className='px-4 py-2 rounded full inline-block'>About-Us</p></NavLink>
+             <NavLink onClick={()=>setshowmenu(false)} to={'/contact'}><p className='px-4 py-2 rounded full inline-block'>Contact-Us</p></NavLink>
+          </ul>
+        </div>
       </div>
     </div>
     </>

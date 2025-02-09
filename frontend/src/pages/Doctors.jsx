@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import { toast } from 'react-toastify'
 
 const Doctors = () => {
   const {speciality} = useParams()
@@ -26,10 +27,9 @@ const Doctors = () => {
     <div className='m-2'>
       <p className='text-gray-600'>Browse through the doctors specialist.</p>
       <div className='flex flex-col sm:flex-row items-start gap-5 mt-5'>
-        <button  className={`py-1 px-3 border rounded text-sm  transition-all sm:hidden`}>Filters</button>
         <div className={`flex-col text-sm text-gray-600`}>
-          <p onClick={()=>navigate('/doctors')}  className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 m-3 border border-gray-300 rounded transition-all cursor-pointer ${!speciality && 'bg-[#E2E5FF] text-black '}`}>All Doctors</p>
-          <p onClick={()=>navigate('/doctors/General physician')}  className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 m-3 border border-gray-300 rounded transition-all cursor-pointer ${speciality === 'General physician' ? 'bg-[#E2E5FF] text-black ' : ''}`}>General physician</p>
+          <p onClick={()=> navigate('/doctors')}  className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 m-3 border border-gray-300 rounded transition-all cursor-pointer ${!speciality && 'bg-[#E2E5FF] text-black '}`}>All Doctors</p>
+          <p onClick={()=> navigate('/doctors/General physician')}  className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 m-3 border border-gray-300 rounded transition-all cursor-pointer ${speciality === 'General physician' ? 'bg-[#E2E5FF] text-black ' : ''}`}>General physician</p>
           <p onClick={()=> navigate('/doctors/Gynecologist')} className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 m-3 border border-gray-300 rounded transition-all cursor-pointer ${speciality === 'Gynecologist' ? 'bg-[#E2E5FF] text-black ' : ''}`}>Gynecologist</p>
           <p onClick={()=> navigate('/doctors/Dermatologist')} className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 m-3 border border-gray-300 rounded transition-all cursor-pointer ${speciality === 'Dermatologist' ? 'bg-[#E2E5FF] text-black ' : ''}`}>Dermatologist</p>
           <p onClick={()=> navigate('/doctors/Pediatricians')} className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 m-3 border border-gray-300 rounded transition-all cursor-pointer ${speciality === 'Pediatricians' ? 'bg-[#E2E5FF] text-black ' : ''}`}>Pediatricians</p>
@@ -39,8 +39,16 @@ const Doctors = () => {
         <div className='w-full grid grid-cols-auto gap-4 gap-y-6'>
         {
             filteredDoc.map((item,index)=>(
-               <div 
-               onClick={()=>item.availability? navigate(`/book-appoinments/${item._id}`):alert(`${item.name} is not available`)} 
+               <div
+               onClick={()=>{
+                if(item.availability){
+                  navigate(`/book-appoinments/${item._id}`),
+                  scrollTo(0,0)
+                }
+                else{
+                  toast.error(`${item.name} is not available`)
+                }
+               }} 
                className='border border-[#C9D8FF] rounded-xl overflow-hidden cursor-pointer hover:translate-y-[-10px] transition-all duration-500'
                 key={index}>
                     <img className='bg-[#EAEFFF]' src={item.image} alt="doctor_image" />

@@ -46,7 +46,7 @@ const Contact = () => {
 
           <div>
             <p className="text-gray-500">
-              Tel: (415) 555-0132 <br /> Email: camit8546@gmail.com
+              Contact : +91 6909979070 <br /> Email: camit8546@gmail.com
             </p>
           </div>
 

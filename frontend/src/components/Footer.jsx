@@ -9,18 +9,18 @@ const Footer = () => {
       <div className='flex flex-col sm:grid grid-cols-[3fr_1fr_1fr] gap-14 my-10  mt-10 text-sm'>
 
         <div>
-          <NavLink to={'/'}><img className='mb-5 w-40' src={assets.logo} alt="logo" /></NavLink>
+          <NavLink to={'/'} onClick={()=>scrollTo(0,0)}><img className='mb-5 w-40' src={assets.logo} alt="logo" /></NavLink>
           <p className='w-full md:w-2/3 text-gray-600 leading-6'>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
         </div>
 
         <div>
           <p className='text-xl font-medium mb-5'>COMPANY</p>
           <ul className='flex flex-col gap-2 font-bold'>
-            <NavLink to={'/'} className={({isActive}) =>`${isActive?'text-orange-600':'text-gray-500'}`}>Home</NavLink>
-            <NavLink to={'/about'} className={({isActive})=>`${isActive?'text-orange-600':'text-gray-500'}`}>About-Us</NavLink>
-            <NavLink to={'/contact'} className={({isActive})=>`${isActive?'text-orange-600':'text-gray-500'}`}>Contact-us</NavLink>
-            <NavLink to={'/doctors'} className={({isActive})=>`${isActive?'text-orange-600':'text-gray-500'}`}>All-Doctors</NavLink>
-            <NavLink to={'/'} className={'text-gray-500'}>Privacy policy</NavLink>
+            <NavLink to={'/'} onClick={()=>scrollTo(0,0)} className={({isActive}) =>`${isActive?'text-orange-600':'text-gray-500'}`}>Home</NavLink>
+            <NavLink to={'/about'} onClick={()=>scrollTo(0,0)} className={({isActive})=>`${isActive?'text-orange-600':'text-gray-500'}`}>About-Us</NavLink>
+            <NavLink to={'/contact'} onClick={()=>scrollTo(0,0)} className={({isActive})=>`${isActive?'text-orange-600':'text-gray-500'}`}>Contact-us</NavLink>
+            <NavLink to={'/doctors'} onClick={()=>scrollTo(0,0)} className={({isActive})=>`${isActive?'text-orange-600':'text-gray-500'}`}>All-Doctors</NavLink>
+            <NavLink to={'/'} onClick={()=>scrollTo(0,0)} className={'text-gray-500'}>Privacy policy</NavLink>
           </ul>
         </div>
 

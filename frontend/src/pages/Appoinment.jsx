@@ -63,7 +63,10 @@ const Appoinment = () => {
   const bookAppoinment= ()=>{
      if(!authstatus){
         toast.error('Please login to book an appoinment', {
-          onClose: () => navigate('/signup')
+          onClose: () => {
+            navigate('/signup'),
+            scrollTo(0,0)
+          }
         });
      }
   }
