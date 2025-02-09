@@ -4,8 +4,8 @@ import doctorSlice from './doctorSlice.js'
 
 const store = configureStore({
     reducer:{
-        admin:adminSlice,
-        doctor:doctorSlice
+        Admin:adminSlice,
+        Doctor:doctorSlice
     }
 })
 
