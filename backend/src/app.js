@@ -21,8 +21,13 @@ app.use(express.static('public'))
 
 //import all routes
 import patientroutes from './routes/patient.routes.js'
+import adminroutes from './routes/admin.routes.js'
 
+//patient
 app.use('/api/v1/patient',patientroutes);
+
+//admin
+app.use('/api/v2/admin',adminroutes)
 
 
 export default app

@@ -12,7 +12,8 @@ const patientSchemma=new mongoose.Schema({
     email:{
         type:String,
         trim:true,
-        lowercase:true
+        lowercase:true,
+        unique:true
     },
     password:{
         type:String,
@@ -22,7 +23,8 @@ const patientSchemma=new mongoose.Schema({
     phone:{
         type:String,
         required:true,
-        trim:true
+        trim:true,
+        unique:true
     },
     address:{
         type:String,

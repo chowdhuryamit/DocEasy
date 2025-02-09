@@ -10,7 +10,8 @@ const doctorSchemma=new mongoose.Schema({
         type:String,
         required:true,
         trim:true,
-        lowercase:true
+        lowercase:true,
+        unique:true
     },
     password:{
         type:String,
@@ -20,7 +21,8 @@ const doctorSchemma=new mongoose.Schema({
     phone:{
         type:Number,
         required:true,
-        trim:true
+        trim:true,
+        unique:true
     },
     address:{
         type:String,
@@ -49,8 +51,17 @@ const doctorSchemma=new mongoose.Schema({
     experience:{
         type:Number,
         required:true
+    },
+    availability:{
+        type:Boolean,
+        default:true,
+        required:true
+    },
+    slots_booked:{
+        type:Object,
+        default:{}
     }
-},{timestamps:true});
+},{timestamps:true,minimize:false});
 
 doctorSchemma.pre('save',async function(next){
     if(this.isModified('password')){

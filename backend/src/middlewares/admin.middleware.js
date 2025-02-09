@@ -4,20 +4,26 @@ const verifyJwtAdmin=async(req,res,next)=>{
    const token=req.cookies._r
 
    if(!token){
-    return res.status(401).json({msg:"Unauthorized request for admin"})
+    return res
+    .status(200)
+    .json({success:false,msg:"Unauthorized request for admin"})
    }
 
-   const payload=jwt.verify(token,process.env.ACCESS_TOKEN_SECRET);
+   const payload=jwt.verify(token,process.env.ADMIN_AUTH_SEC);
 
    if(!payload){
-    return res.status(401).json({msg:"Invalid token for admin"})
+    return res
+    .status(200)
+    .json({success:true, msg:"Invalid token for admin"})
    }
 
-   if(payload._id=process.env.ADMIN_AUTH_SEC){
+   if(payload._id === process.env.ADMIN_EMAIL){
     next();
    }
    else{
-    return res.status(401).json({msg:"invalid token"})
+    return res
+    .status(200)
+    .json({success:false,msg:"invalid token"})
    }
 }
 

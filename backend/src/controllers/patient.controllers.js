@@ -93,6 +93,7 @@ const loginPatient = async (req, res) => {
         loggedInPatient,
       });
   } catch (error) {
+    
     return res
       .status(400)
       .json({
