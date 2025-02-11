@@ -6,7 +6,6 @@ import { adminLogout } from '../store/adminSlice.js'
 
 const Navbar = () => {
     const adminStatus = useSelector((state)=>state.Admin.status)
-    const doctorStatus = useSelector((state)=>state.Doctor.status)
     const dispatch=useDispatch()
 
     if(adminStatus){

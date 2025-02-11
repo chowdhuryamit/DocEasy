@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 
 const verifyJwtDoctor=async(req,res,next)=>{
-   const token=req.cookies._r
+   const token=req.cookies._d
    if(!token){
     return res.status(401).json({msg:"Unauthorized request for doctor"})
    }

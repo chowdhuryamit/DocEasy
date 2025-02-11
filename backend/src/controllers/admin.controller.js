@@ -24,7 +24,7 @@ const adminLogin = async(req,res) => {
        if(token){
          return res
          .status(200)
-         .cookie('_r',token,options)
+         .cookie('_a',token,options)
          .json({success:true,msg:"admin login successfully"})
        }
        else{

@@ -311,4 +311,49 @@ export const doctors = [
             line2: 'Circle, Ring Road, London'
         }
     },
+    {
+        _id: 'doc16',
+        name: 'Dr. Sudip karmakar',
+        image: doc15,
+        speciality: 'Gastroenterologist',
+        degree: 'MBBS',
+        experience: '1 Years',
+        about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies. Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
+        fees: 120,
+        availability:true,
+        address: {
+            line1: '37th Cross, Richmond',
+            line2: 'Circle, Ring Road, London'
+        }
+    },
+    {
+        _id: 'doc17',
+        name: 'Dr. Bhola paul',
+        image: doc8,
+        speciality: 'Gastroenterologist',
+        degree: 'MBBS',
+        experience: '1 Years',
+        about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies. Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
+        fees: 190,
+        availability:true,
+        address: {
+            line1: '37th Cross, Richmond',
+            line2: 'Circle, Ring Road, London'
+        }
+    },
+    {
+        _id: 'doc18',
+        name: 'Dr. Hritam Datta',
+        image: doc11,
+        speciality: 'Gastroenterologist',
+        degree: 'MBBS',
+        experience: '1 Years',
+        about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies. Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
+        fees: 200,
+        availability:true,
+        address: {
+            line1: '37th Cross, Richmond',
+            line2: 'Circle, Ring Road, London'
+        }
+    },
 ]
