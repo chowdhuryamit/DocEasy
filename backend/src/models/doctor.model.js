@@ -19,7 +19,7 @@ const doctorSchemma=new mongoose.Schema({
         trim:true
     },
     phone:{
-        type:Number,
+        type:String,
         required:true,
         trim:true,
         unique:true
@@ -41,7 +41,7 @@ const doctorSchemma=new mongoose.Schema({
         required:true
     },
     fees:{
-        type:Number,
+        type:String,
         required:true
     },
     picture:{
@@ -49,7 +49,7 @@ const doctorSchemma=new mongoose.Schema({
         required:true
     },
     experience:{
-        type:Number,
+        type:String,
         required:true
     },
     availability:{

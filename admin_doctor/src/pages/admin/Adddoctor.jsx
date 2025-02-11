@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { assets } from '../../assets/assets'
 import {toast} from 'react-toastify'
+import axios from 'axios'
 
 const Adddoctor = () => {
   const [docImg,setDocImg] = useState(null)
@@ -21,7 +22,38 @@ const Adddoctor = () => {
       toast.error('please upload doctor image')
     }
     else{
-       
+       try {
+         const formData = new FormData()
+         formData.append('name',docName)
+         formData.append('email',docEmail)
+         formData.append('phone',phone)
+         formData.append('password',docPassword)
+         formData.append('fees',docFee)
+         formData.append('experience',docEx)
+         formData.append('specialization',speciality)
+         formData.append('degree',degree)
+         formData.append('about',about)
+         formData.append('address',address)
+         formData.append('picture',docImg)
+
+
+         const {data} = await axios.post('http://localhost:8000/api/v2/admin/add-doctor',
+                        formData,
+                        { withCredentials: true,
+                          headers: {
+                           "Content-Type": "multipart/form-data",
+                          },
+                        })
+
+         if(data.success){
+          toast.success(data.msg)
+         }
+         else{
+          toast.error(data.msg)
+         }
+       } catch (error) {
+         toast.error('doctor uploading failed')
+       }
     }
   }
   return (
@@ -103,7 +135,7 @@ const Adddoctor = () => {
       
       <div className='mt-4'>
         <p className='mb-2'>About Doctor</p>
-        <textarea onChange={(e) => setAbout(e.target.value)} value={about} className='w-full px-4 pt-2 border rounded focus:ring focus:ring-primary' rows={5} placeholder='Write about doctor'></textarea>
+        <textarea onChange={(e) => setAbout(e.target.value)} value={about} className='w-full px-4 pt-2 border rounded focus:ring focus:ring-primary' rows={5} placeholder='Write about doctor' required></textarea>
       </div>
       
       <button type='submit' className='bg-primary px-10 py-3 mt-4 text-white rounded-full hover:bg-primary-dark transition'>Add doctor</button>
