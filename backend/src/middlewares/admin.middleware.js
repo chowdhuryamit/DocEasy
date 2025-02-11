@@ -18,6 +18,7 @@ const verifyJwtAdmin=async(req,res,next)=>{
    }
 
    if(payload._id === process.env.ADMIN_EMAIL){
+    req.admin=payload
     next();
    }
    else{

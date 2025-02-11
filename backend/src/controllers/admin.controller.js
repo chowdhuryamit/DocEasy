@@ -40,6 +40,29 @@ const adminLogin = async(req,res) => {
     }
 }
 
+
+//admin logout
+const adminLogout = async (req,res)=>{
+   const admin=req.admin
+   if(!admin){
+    return res
+    .status(200)
+    .json({success:false,msg:'admin is not login'})
+   }
+
+   const options = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+  };
+
+  return res
+  .status(200)
+  .clearCookie('_a',options)
+  .json({success:true,msg:'admin logout successfully'})
+}
+
 export{
-    adminLogin
+    adminLogin,
+    adminLogout
 }

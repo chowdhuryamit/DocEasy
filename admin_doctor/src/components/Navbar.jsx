@@ -3,10 +3,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { assets } from '../assets/assets.js'
 import { doctorLogout } from '../store/doctorSlice.js'
 import { adminLogout } from '../store/adminSlice.js'
+import axios from 'axios'
+import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
 
 const Navbar = () => {
     const adminStatus = useSelector((state)=>state.Admin.status)
     const dispatch=useDispatch()
+    const navigate = useNavigate()
 
     useEffect(()=>{
       if(adminStatus){
@@ -18,7 +22,27 @@ const Navbar = () => {
     },[adminStatus])
 
     const logout = async ()=>{
-
+      if(adminStatus){
+        try {
+          const {data} = await axios.post('http://localhost:8000/api/v2/admin/logout',{},{ withCredentials: true })
+          if(data.success){
+             toast.success(data.msg,{
+               onClose:()=> {
+                dispatch(adminLogout());
+                navigate('/')
+               }
+             })
+          }
+          else{
+           toast.error(data.msg)
+          }
+       } catch (error) {
+         toast.error('Logout failed.try again')
+       }
+      }
+      else{
+        
+      }
     }
 
   return (

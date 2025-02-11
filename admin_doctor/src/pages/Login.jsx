@@ -3,6 +3,7 @@ import axios from 'axios';
 import {toast} from 'react-toastify'
 import { useDispatch } from 'react-redux';
 import { adminLogin } from '../store/adminSlice';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const [state,setState] = useState('Admin')
@@ -10,6 +11,7 @@ const Login = () => {
     const [password,setPassword] = useState('')
 
     const dispatch = useDispatch()
+    const navigate = useNavigate()
 
     const handlesubmit = async (e) =>{
       e.preventDefault()
@@ -21,7 +23,7 @@ const Login = () => {
             setEmail('')
             setPassword('')
             toast.success(data.msg, {
-              onClose: () => dispatch(adminLogin())
+              onClose: () =>{dispatch(adminLogin()),navigate('/')} 
             });
           }
           else{
