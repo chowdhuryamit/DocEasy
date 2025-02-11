@@ -1,17 +1,39 @@
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import {toast} from 'react-toastify'
+import { useDispatch } from 'react-redux';
+import { adminLogin } from '../store/adminSlice';
 
 const Login = () => {
     const [state,setState] = useState('Admin')
     const [email,setEmail] = useState('');
     const [password,setPassword] = useState('')
 
-    const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const handlesubmit = async (e) =>{
       e.preventDefault()
       if(state === 'Admin'){
-        
+        try {
+          const {data} = await axios.post('http://localhost:8000/api/v2/admin/login',{email,password},{ withCredentials: true })
+          
+          if(data.success){
+            setEmail('')
+            setPassword('')
+            toast.success(data.msg, {
+              onClose: () => dispatch(adminLogin())
+            });
+          }
+          else{
+            setEmail('')
+            setPassword('')
+            toast.error(data.msg)
+          }
+        } catch (error) {
+          setEmail('')
+          setPassword('')
+          toast.error('network error please try again')
+        }
       }
       else{
 

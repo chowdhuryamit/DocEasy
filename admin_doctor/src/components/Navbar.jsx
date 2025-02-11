@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { assets } from '../assets/assets.js'
 import { doctorLogout } from '../store/doctorSlice.js'
@@ -8,12 +8,14 @@ const Navbar = () => {
     const adminStatus = useSelector((state)=>state.Admin.status)
     const dispatch=useDispatch()
 
-    if(adminStatus){
+    useEffect(()=>{
+      if(adminStatus){
         dispatch(doctorLogout())
-    }
-    else{
+      }
+      else{
         dispatch(adminLogout())
-    }
+      }
+    },[adminStatus])
 
     const logout = async ()=>{
 

@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom'
 import { useSelector } from 'react-redux';
 import { Login } from './pages/index.js';
 import {Navbar,Sidebar} from './components/index.js';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() { 
 

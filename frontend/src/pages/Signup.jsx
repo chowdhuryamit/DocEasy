@@ -54,9 +54,8 @@ const Signup = () => {
             setName('')
             setPhone('')
             setPassword('')
-            dispatch(login({userData:data.loggedInPatient}))
             toast.success(data.msg, {
-              onClose: () => navigate('/')
+              onClose: () => {dispatch(login({userData:data.loggedInPatient})),navigate('/')}
             });
            }
         } catch (error) {

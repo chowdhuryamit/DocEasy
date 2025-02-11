@@ -54,8 +54,7 @@ const doctorSchemma=new mongoose.Schema({
     },
     availability:{
         type:Boolean,
-        default:true,
-        required:true
+        default:true
     },
     slots_booked:{
         type:Object,
