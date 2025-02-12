@@ -18,6 +18,7 @@ const Adddoctor = () => {
 
   const handleFormSubmit = async (e)=>{
     e.preventDefault()
+    
     if(!docImg){
       toast.error('please upload doctor image')
     }
@@ -87,6 +88,7 @@ const Adddoctor = () => {
           <div className='flex-1 flex flex-col gap-1'>
             <p>Doctor Experience</p>
             <select onChange={(e) => setEx(e.target.value)} className='border rounded px-3 py-2 focus:ring focus:ring-primary' value={docEx} required>
+              <option value="">select experience</option>
               <option value="1 years">1 years</option>
               <option value="2 years">2 years</option>
               <option value="3 years">3 years</option>
@@ -108,6 +110,7 @@ const Adddoctor = () => {
           <div className='flex-1 flex flex-col gap-1'>
             <p>Speciality</p>
             <select onChange={(e) => setSpeciality(e.target.value)} value={speciality} className='border rounded px-2 py-2 focus:ring focus:ring-primary' required>
+              <option value="">select speciality</option>
               <option value="General physician">General physician</option>
               <option value="Gynecologist">Gynecologist</option>
               <option value="Dermatologist">Dermatologist</option>

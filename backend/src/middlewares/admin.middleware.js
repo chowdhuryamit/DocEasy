@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken'
 
 const verifyJwtAdmin=async(req,res,next)=>{
    const token=req.cookies._a
-
+   
    if(!token){
     return res
     .status(200)
