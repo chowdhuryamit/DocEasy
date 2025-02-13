@@ -42,7 +42,6 @@ const adminLogin = async(req,res) => {
     }
 }
 
-
 //admin logout
 const adminLogout = async (req,res)=>{
    const admin=req.admin
@@ -164,9 +163,84 @@ const getAdmin = async (req,res) =>{
   }
 }
 
+const getDoctors = async (req,res) =>{
+  if(!req.admin){
+     return res
+     .status(200)
+     .json({success:false,msg:'please login to get doctor data'})
+  }
+   
+  try {
+    const doctors = await Doctor.find().select("-password")
+    if(doctors){
+      return res
+      .status(200)
+      .json({success:true,msg:'doctor data fetched successfully',doctors})
+    }
+    else{
+      return res
+      .status(200)
+      .json({success:false,msg:'doctor data is not fetched'})
+    }
+  } catch (error) {
+    return res
+    .status(400)
+    .json({success:false,msg:'error occured while fetching doctor data'})
+  }
+}
+
+const changeAvailability = async (req,res) =>{
+  if(!req.admin){
+    return res
+    .status(200)
+    .json({success:false,msg:'your not authorized to do so'})
+  }
+
+  const docId = req.query.docId
+
+  if(!docId){
+    return res
+    .status(200)
+    .json({success:false,msg:'doctor id is required'})
+  }
+
+  try {
+    const response = await Doctor.findById(docId)
+
+    if(!response){
+      return res
+      .status(200)
+      .json({success:false,msg:'invalid doctor id'})
+    }
+    
+    const updatedResponse = await  Doctor.findByIdAndUpdate(docId,{
+      $set:{
+        availability:!response.availability
+      }
+    },{new:true})
+
+    if(updatedResponse){
+      return res
+      .status(200)
+      .json({success:true,msg:'Availability updated successfully'})
+    }
+    else{
+      return res
+      .status(200)
+      .json({success:false,msg:'kindly reload page and check availability is updated or not'})
+    }
+  } catch (error) {
+    return res
+    .status(400)
+    .json({success:false,msg:'error occured while updating doctor availability'})
+  }
+}
+
 export{
     adminLogin,
     adminLogout,
     addDoctor,
-    getAdmin
+    getAdmin,
+    getDoctors,
+    changeAvailability
 }

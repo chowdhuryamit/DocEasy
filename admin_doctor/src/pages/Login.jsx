@@ -5,6 +5,35 @@ import { useDispatch } from 'react-redux';
 import { adminLogin } from '../store/adminSlice';
 import { useNavigate } from 'react-router-dom';
 
+const fetchDoctorsDataForAdmin = async (dispatch,navigate)=>{
+  try {
+    const {data} = await axios.get('http://localhost:8000/api/v2/admin/get-doctors',{ withCredentials: true })
+    if(data.success){
+       toast.success(data.msg,{
+        onClose:() =>{
+          dispatch(adminLogin({doctors:data.doctors}))
+          navigate('/')
+        }
+       })
+    }
+    else{
+      toast.error(data.msg,{
+        onClose:() =>{
+          dispatch(adminLogin({doctors:[]}))
+          navigate('/')
+        }
+      })
+    }
+  } catch (error) {
+    toast.error('error occured while fetching doctors information',{
+      onClose:() =>{
+        dispatch(adminLogin({doctors:[]}))
+        navigate('/')
+      }
+    })
+  }
+}
+
 const Login = () => {
     const [state,setState] = useState('Admin')
     const [email,setEmail] = useState('');
@@ -23,7 +52,9 @@ const Login = () => {
             setEmail('')
             setPassword('')
             toast.success(data.msg, {
-              onClose: () =>{dispatch(adminLogin()),navigate('/')} 
+              onClose: () =>{
+                fetchDoctorsDataForAdmin(dispatch,navigate)
+              }
             });
           }
           else{

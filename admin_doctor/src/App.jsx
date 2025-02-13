@@ -10,14 +10,30 @@ import { toast } from 'react-toastify';
 import { adminLogin,adminLogout } from './store/adminSlice.js';
 import { doctorLogin,doctorLogout } from './store/doctorSlice.js';
 
+const fetchDoctorDataForadmin = async (dispatch)=>{
+  try {
+    const {data} = await axios.get('http://localhost:8000/api/v2/admin/get-doctors',{ withCredentials: true })
+
+    if(data.success){
+      dispatch(adminLogin({doctors:data.doctors}));
+      dispatch(doctorLogout());  
+    }
+    else{
+      dispatch(adminLogin({doctors:[]}));
+      dispatch(doctorLogout());
+    }
+  } catch (error) {
+    dispatch(adminLogin({doctors:[]}));
+    dispatch(doctorLogout());
+  }
+}
+
 const fetchAdminStatus = async (dispatch)=>{
   
   try {
     const { data } = await axios.get('http://localhost:8000/api/v2/admin/get-admin',{ withCredentials: true });
     if (data.success) {
-      
-      dispatch(adminLogin());
-      dispatch(doctorLogout());  
+      fetchDoctorDataForadmin(dispatch)
     } else {
       dispatch(adminLogout());
     }
