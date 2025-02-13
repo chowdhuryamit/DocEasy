@@ -12,7 +12,7 @@ const RelatedDoctors = ({speciality,docId}) => {
 
     const findRelateddoctors=()=>{
         if(speciality && doctors.length>0){
-            const relDocs=doctors.filter((doc)=> doc.speciality===speciality && doc._id!==docId)
+            const relDocs=doctors.filter((doc)=> doc.specialization===speciality && doc._id!==docId)
             setRelatedDoctors(relDocs)
         }
     }
@@ -37,14 +37,14 @@ const RelatedDoctors = ({speciality,docId}) => {
                   toast.error(`${item.name} is not available`)
                 }
                }} className='border border-[#C9D8FF] rounded-xl overflow-hidden cursor-pointer hover:translate-y-[-10px] transition-all duration-500' key={index}>
-                    <img className='bg-[#EAEFFF]' src={item.image} alt="doctor_image" />
+                    <img className='bg-[#EAEFFF]' src={item.picture} alt="doctor_image" />
                     <div className='p-4'>
                        <div className={`flex items-center gap-2 text-sm text-center ${item.availability? 'text-green-500' :'text-gray-500'}`}>
                          <p className={`w-2 h-2 rounded-full ${item.availability?'bg-green-500':'bg-gray-500'}`}></p>
                          <p>{item.availability?'Available':'Not Available'}</p>
                        </div>
                        <p className='text-[#262626] text-lg font-medium'>{item.name}</p>
-                       <p className='text-[#5C5C5C] text-sm'>{item.speciality}</p>
+                       <p className='text-[#5C5C5C] text-sm'>{item.specialization}</p>
                     </div>
                </div>
             ))

@@ -87,7 +87,7 @@ const Appoinment = () => {
           <div className="w-full max-w-[320px] sm:max-w-[280px] md:max-w-[350px] rounded-lg overflow-hidden shadow-md">
             <img
               className="w-full h-auto object-cover rounded-lg bg-primary"
-              src={docInfo.image}
+              src={docInfo.picture}
               alt="Doctor"
             />
           </div>
@@ -100,7 +100,7 @@ const Appoinment = () => {
 
             <div className="flex flex-wrap items-center gap-2 mt-1 text-gray-600 text-sm md:text-base">
               <p>
-                {docInfo.degree} - {docInfo.speciality}
+                {docInfo.degree} - {docInfo.specialization}
               </p>
               <button className="py-1 px-3 border text-xs md:text-sm rounded-full bg-gray-200">
                 {docInfo.experience} Years
@@ -146,7 +146,7 @@ const Appoinment = () => {
         </div>
         
         
-        <RelatedDoctors speciality={docInfo.speciality} docId={docId}/>
+        <RelatedDoctors speciality={docInfo.specialization} docId={docId}/>
       </div>
   );
 };

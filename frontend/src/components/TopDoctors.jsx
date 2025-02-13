@@ -27,7 +27,7 @@ const TopDoctors = () => {
             className="border border-[#C9D8FF] rounded-xl overflow-hidden cursor-pointer hover:translate-y-[-10px] transition-all duration-500"
             key={index}
           >
-            <img className="bg-[#EAEFFF]" src={item.image} alt="doctor_image" />
+            <img className="bg-[#EAEFFF]" src={item.picture} alt="doctor_image" />
             <div className="p-4">
               <div
                 className={`flex items-center gap-2 text-sm text-center ${
@@ -42,7 +42,7 @@ const TopDoctors = () => {
                 <p>{item.availability ? "Available" : "Not Available"}</p>
               </div>
               <p className="text-[#262626] text-lg font-medium">{item.name}</p>
-              <p className="text-[#5C5C5C] text-sm">{item.speciality}</p>
+              <p className="text-[#5C5C5C] text-sm">{item.specialization}</p>
             </div>
           </div>
         ))}

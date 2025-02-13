@@ -6,38 +6,48 @@ import { useDispatch } from 'react-redux'
 import { setDoctors } from './store/doctorSlice.js'
 import axios from 'axios'
 import {login,logout} from './store/authSlice.js'
-import { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
+const fetchDoctors = async (dispatch)=>{
+  try {
+    const {data} = await axios.get('http://localhost:8000/api/v3/doctor/get-doctor',{ withCredentials: true })
+    if(data.success){
+      dispatch(setDoctors({doctors:data.doctors}))
+    }
+    else{
+      toast.error(data.msg)
+    }
+  } catch (error) {
+    toast.error('error occured while fetching doctor information for patient')
+  }
+}
+
+const fetchUser = async (dispatch)=>{
+  try {
+    const {data} =await axios.get('http://localhost:8000/api/v1/patient/get-patient',{ withCredentials: true })
+
+    if(data.success){
+      fetchDoctors(dispatch)
+      dispatch(login({userData:data.patientData}))
+    }
+    else{
+      dispatch(logout())
+      fetchDoctors(dispatch)
+    }
+  } catch (error) {
+    fetchDoctors(dispatch)
+    dispatch(logout())
+  }
+}
+
 
 const App = () => {
 
   const dispatch=useDispatch();
 
   useEffect(()=>{
-
-    axios.get('http://localhost:8000/api/v1/patient/get-patient',{ withCredentials: true })
-    .then((patientData)=>{
-      
-      if(patientData.data.success===false){
-        dispatch(logout())
-        //api call will done here
-       dispatch(setDoctors({doctors}))
-      }
-      else{
-        //api call will done here
-        dispatch(setDoctors({doctors}))
-        dispatch(login({userData:patientData.data.patientData}))
-      }
-    })
-    .catch((error)=>{
-      //api call will done here
-      dispatch(setDoctors({doctors}))
-      dispatch(logout())
-    })
-    .finally(()=>{
-       //api call will done here
-       dispatch(setDoctors({doctors}))
-    })
+    fetchUser(dispatch)
   },[dispatch])
 
   return (
