@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { assets } from '../assets/assets'
+import axios from 'axios'
+import { login,logout } from '../store/authSlice.js'
+import { toast } from 'react-toastify'
 
 const UserProfile = () => {
 
@@ -15,20 +18,47 @@ const UserProfile = () => {
       dob: "",
   })
 
+  const [userPic,setUserPic] = useState(null)
+
   const userData=useSelector((state)=>state.auth.userData)
+
+  const dispatch = useDispatch();
 
   const updateUserProfileData = async ()=>{
      //update user profile information
-     
-     
-     setIsEdit(false)
+     try {
+      const formData = new FormData()
+      formData.append('name',userStateDate.name)
+      formData.append('email',userStateDate.email)
+      formData.append('address',userStateDate.address)
+      formData.append('gender',userStateDate.gender)
+      formData.append('dob',userStateDate.dob)
+      
+      userPic && formData.append('image',userPic)
+
+      const {data} = await axios.patch('http://localhost:8000/api/v1/patient/update-info',formData,{ withCredentials: true })
+
+      if(data.success){
+        toast.success(data.msg,{
+          onClose:()=>{
+            setIsEdit(false),
+            dispatch(login({userData:data.patientData}))
+          }
+        })
+      }
+      else{
+        toast.error(data.msg)
+      }
+     } catch (error) {
+      toast.error('network error.try again')
+     }
   }
 
  useEffect(()=>{
    if(userData){
     setUserStateData({
       name:userData.name,
-      image:userData.image?userData.image:assets.profile_pic,
+      image:userData.photo?userData.photo:assets.profile_pic,
       email:userData.email?userData.email:'Not Provided',
       phone:userData.phone,
       address:userData.address?userData.address:'Not Provided',
@@ -46,9 +76,17 @@ const UserProfile = () => {
       <div className="flex justify-center px-4">
       <div className="max-w-lg w-full flex flex-col gap-2 text-sm pt-5 p-6 rounded-lg">
         <div className="flex flex-col items-center">
-          <div className="inline-block relative cursor-pointer my-2">
+          {isEdit? 
+          <label htmlFor="image">
+            <div className='inline-block relative cursor-pointer'>
+              <img className='w-36 rounded opacity-75' src={userPic?URL.createObjectURL(userPic):userStateDate.image} alt="" />
+              <img className='w-10 absolute bottom-12 right-12' src={userPic?'':assets.upload_icon} alt="" />
+            </div>
+            <input type="file" id='image' onChange={(e)=>setUserPic(e.target.files[0])} hidden/>
+          </label>
+          :<div className="inline-block relative cursor-pointer my-2">
             <img className="w-36 h-36 object-cover rounded-full shadow-md" src={userStateDate.image} alt="profile_pic" />
-          </div>
+          </div>}
           {isEdit ? (
             <input
               type="text"

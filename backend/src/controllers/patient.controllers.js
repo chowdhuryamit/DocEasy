@@ -1,4 +1,6 @@
 import { Patient } from "../models/patient.model.js";
+import fs from 'fs'
+import { uploadOnCloudinary,deleteFromCloudinary } from "../utils/cloudinary.js";
 
 //register controller
 const registerPatient = async (req, res) => {
@@ -147,4 +149,95 @@ const getPatient = async (req, res) => {
   }
 };
 
-export { registerPatient, loginPatient, logoutPatient, getPatient };
+const updatePatientInfo = async (req,res) =>{
+  if(!req.patient){
+    return res
+    .status(200)
+    .json({success:false,msg:'patient should login while updating information'})
+  }
+  try {
+    const {name,email,address,gender,dob} = req.body;
+    const photoLocalPath =req.file?.path
+
+    const user = await Patient.findById(req.patient._id)
+
+    if(!user){
+      if(photoLocalPath && fs.existsSync(photoLocalPath)){
+        fs.unlinkSync(photoLocalPath)
+      }
+      return res
+      .status(200)
+      .json({success:false,msg:'no patient exist'})
+    }
+
+    const similarEmail = await Patient.findOne({email:email})
+
+    if(similarEmail){
+      if(!similarEmail._id.equals(user._id)){
+        if(photoLocalPath && fs.existsSync(photoLocalPath)){
+          fs.unlinkSync(photoLocalPath)
+        }
+        return res
+        .status(200)
+        .json({success:false,msg:'try with another email'})
+      }
+    }
+    
+    
+    const userImage = user.photo
+
+    if(photoLocalPath && userImage){
+      const response = await deleteFromCloudinary(userImage)      
+      if(!response){
+        if(photoLocalPath && fs.existsSync(photoLocalPath)){
+          fs.unlinkSync(photoLocalPath)
+        }
+        return res
+        .status(200)
+        .json({success:false,msg:'delation of old image is not done.process terminated'})
+      }
+    }
+
+    let cloudinaryURl=null;
+    if(photoLocalPath){
+      cloudinaryURl = await uploadOnCloudinary(photoLocalPath)
+
+      if(!cloudinaryURl){
+        return res
+        .status(200)
+        .json({success:false,msg:'uploading on cloudinary failed'})
+      }
+    }
+
+    const newPatient = await Patient.findByIdAndUpdate(req.patient._id,{
+      $set:{
+        name:name,
+        email:email,
+        address:address,
+        gender:gender,
+        dob:dob,
+        photo:cloudinaryURl?cloudinaryURl.secure_url:userImage
+      }
+    },{new:true}).select("-password")
+
+    if(newPatient){
+      return res
+      .status(200)
+      .json({success:true,msg:'patient information updated successfully',patientData:newPatient})
+    }
+    else{
+      return res
+      .status(200)
+      .jason({success:false,msg:'patient data updation failed'})
+    }
+  } catch (error) {
+    if(photoLocalPath && fs.existsSync(photoLocalPath)){
+      fs.unlinkSync(photoLocalPath)
+    }
+    return res
+    .status(400)
+    .json({success:false,msg:'something went wrong'})
+  }
+}
+
+export { registerPatient, loginPatient, logoutPatient, getPatient,updatePatientInfo };

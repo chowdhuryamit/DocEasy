@@ -33,21 +33,19 @@ const deleteFromCloudinary=async(url)=>{
     if(!url){
         return null;
     }
-    else{
-      const lastIndexBackslash=url.lastIndexOf('/');
-      const lastIndexDot=url.lastIndexOf('.');
-      const public_id=url.substring(
-        lastIndexBackslash+1,
-        lastIndexDot
-      )
+    try {
+        const lastIndexBackslash=url.lastIndexOf('/');
+        const lastIndexDot=url.lastIndexOf('.');
+        const public_id=url.substring(
+           lastIndexBackslash+1,
+           lastIndexDot
+        )
 
-      await cloudinary.uploader.destroy(public_id)
-      .then(()=>{
-        return true;
-      })
-      .catch(()=>{
-        return false;
-      })
+        await cloudinary.uploader.destroy(public_id)
+
+        return true
+    } catch (error) {
+        return false
     }
 }
 

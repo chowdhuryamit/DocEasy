@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
 import { Navbar,Footer } from './components'
-import { doctors } from './assets/assets'
 import { useDispatch } from 'react-redux'
 import { setDoctors } from './store/doctorSlice.js'
 import axios from 'axios'
