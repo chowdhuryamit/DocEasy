@@ -11,20 +11,32 @@ const appoinmentSchemma=new mongoose.Schema({
         ref:'Doctor',
         required:true
     },
-    date:{
+    slot_date:{
         type:String,
         required:true,
     },
+    slot_time:{
+        type:String,
+        required:true
+    },
     cancelled:{
         type:Boolean,
-        required:true
+        required:true,
+        default:false
     },
     isCompleted:{
         type:Boolean,
-        required:true
+        required:true,
+        default:false
     },
     payment:{
-       type:String,
+       type:Boolean,
+       required:true,
+       default:false
+    },
+    amount:{
+        type:String,
+        required:true
     }
 },{timestamps:true});
 

@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { assets } from "../assets/assets";
 import { RelatedDoctors } from "../components/index.js";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 const Appoinment = () => {
   const { docId } = useParams();
@@ -60,15 +61,40 @@ const Appoinment = () => {
     }
   }
 
-  const bookAppoinment= ()=>{
+  const bookAppoinment= async ()=>{
      if(!authstatus){
-        toast.error('Please login to book an appoinment', {
+        toast.warn('Please login to book an appoinment', {
           onClose: () => {
             navigate('/signup'),
             scrollTo(0,0)
           }
         });
      }
+
+     const date = docSlots[slotIndex][0].dateTime
+
+     let day = date.getDate()
+     let month = date.getMonth()+1
+     let year = date.getFullYear()
+
+     const slotDate = day +"_"+month+"_"+year
+     
+     try {
+      const {data} = await axios.post('http://localhost:8000/api/v1/patient/book-appoinment',{doc:docInfo._id,slot_date:slotDate,slot_time:slotTime},{ withCredentials: true })
+      if(data.success){
+        toast.success(data.msg,{
+          onClose:()=>{
+            navigate('/appoinments'),
+            scrollTo(0,0)
+          }
+        })
+      }
+      else{
+        toast.error(data.msg)
+      }
+     } catch (error) {
+      toast.error('error occured while booking appoinments')
+    }
   }
 
   useEffect(() => {

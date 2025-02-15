@@ -1,6 +1,8 @@
 import { Patient } from "../models/patient.model.js";
 import fs from 'fs'
 import { uploadOnCloudinary,deleteFromCloudinary } from "../utils/cloudinary.js";
+import { Doctor } from "../models/doctor.model.js";
+import { Appoinment } from "../models/appoinment.model.js";
 
 //register controller
 const registerPatient = async (req, res) => {
@@ -125,6 +127,7 @@ const logoutPatient = async (req, res) => {
     .json({ success: true, msg: "patient logged out successfully" });
 };
 
+//get patient information for frontend
 const getPatient = async (req, res) => {
   if (req.patient === null) {
     return res
@@ -149,6 +152,7 @@ const getPatient = async (req, res) => {
   }
 };
 
+//update patient information
 const updatePatientInfo = async (req,res) =>{
   if(!req.patient){
     return res
@@ -240,4 +244,103 @@ const updatePatientInfo = async (req,res) =>{
   }
 }
 
-export { registerPatient, loginPatient, logoutPatient, getPatient,updatePatientInfo };
+//book-appoinments
+const bookAppoinment = async (req,res) =>{
+  if(!req.patient){
+    return res
+    .status(200)
+    .json({success:false,msg:'please login to book an appoinment'})
+  }
+
+  try {
+    const patientData = await Patient.findById(req.patient._id)
+
+    if(!patientData){
+      return res
+      .status(200)
+      .json({success:false,msg:'patient not found'})
+    }
+  
+    const {doc,slot_date,slot_time} = req.body
+
+    const docData = await Doctor.findById(doc)
+
+    if(!docData){
+      return res
+      .status(200)
+      .json({success:false,msg:'doctor not found'})
+    }
+
+    if(!docData.availability){
+      return res
+      .status(200)
+      .json({success:false,msg:`${docData.name} is not available`})
+    }
+
+    const slots_booked = docData.slots_booked
+
+    if(slots_booked[slot_date]){
+      if(slots_booked[slot_date].includes(slot_time)){
+        return res
+        .status(200)
+        .json({success:false,msg:'slot is not available'})
+      }
+      else{
+        slots_booked[slot_date].push(slot_time)
+      }
+    }
+    else{
+      slots_booked[slot_date]=[]
+      slots_booked[slot_date].push(slot_time)
+    }
+
+    const currentDateObj = new Date()
+
+    Object.keys(slots_booked).forEach(date => {
+      const [day,month,year] = date.split('_').map(Number)
+      const bookedDate = new Date(year,month-1,day)
+      if (bookedDate<currentDateObj) {
+        delete slots_booked[date]
+      }
+    })
+
+    const appoinment = await Appoinment.create({
+      patient:patientData._id,
+      doc:docData._id,
+      slot_date:slot_date,
+      slot_time:slot_time,
+      amount:docData.fees
+    })
+
+    if(!appoinment){
+      return res
+      .status(200)
+      .json({success:false,msg:'appoinment booking failed'})
+    }
+
+    const response = await Doctor.findByIdAndUpdate(docData._id,{
+      $set:{
+        slots_booked:slots_booked
+      }
+    },{new:true})
+
+    if(response){
+      return res
+      .status(200)
+      .json({success:true,msg:'slot is successfully booked'})
+    }
+    else{
+      await Appoinment.findByIdAndDelete(appoinment._id)
+      return res
+      .status(200)
+      .json({success:false,msg:'appoinment booking failed'})
+    }
+  } catch (error) {
+    console.log(error)
+    return res
+    .status(200)
+    .json({success:false,msg:'error ocured while booking appoinment'})
+  }
+}
+
+export { registerPatient, loginPatient, logoutPatient, getPatient,updatePatientInfo,bookAppoinment };
