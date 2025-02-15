@@ -3,6 +3,7 @@ import fs from 'fs'
 import { uploadOnCloudinary,deleteFromCloudinary } from "../utils/cloudinary.js";
 import { Doctor } from "../models/doctor.model.js";
 import { Appoinment } from "../models/appoinment.model.js";
+import mongoose from "mongoose";
 
 //register controller
 const registerPatient = async (req, res) => {
@@ -283,7 +284,7 @@ const bookAppoinment = async (req,res) =>{
       if(slots_booked[slot_date].includes(slot_time)){
         return res
         .status(200)
-        .json({success:false,msg:'slot is not available'})
+        .json({success:false,msg:'slot is not available.Already booked'})
       }
       else{
         slots_booked[slot_date].push(slot_time)
@@ -343,4 +344,80 @@ const bookAppoinment = async (req,res) =>{
   }
 }
 
-export { registerPatient, loginPatient, logoutPatient, getPatient,updatePatientInfo,bookAppoinment };
+//get patient appoinments
+const getAllAppoinments = async (req,res) =>{
+  if(!req.patient){
+    return res
+    .status(200)
+    .json({success:false,msg:'you need to login to see appoinments'})
+  }
+
+  try {
+    const patientData = await Patient.findById(req.patient._id)
+
+  if(!patientData){
+    return res
+    .status(200)
+    .json({success:false,msg:'patient not found'})
+  }
+
+  const appoinments = await Appoinment.aggregate([
+    {
+      $match:{
+        patient:new mongoose.Types.ObjectId(patientData._id)
+      }
+    },
+    {
+      $lookup:{
+        from:'doctors',
+        localField:'doc',
+        foreignField:'_id',
+        as:'doctor',
+        pipeline:[
+          {
+            $project:{
+              name:1,
+              address:1,
+              specialization:1,
+              picture:1,
+            }
+          }
+        ]
+      }
+    },
+    {
+      $addFields:{
+        doctor:{$arrayElemAt:['$doctor',0]}
+      }
+    },
+    {
+      $project:{
+        slot_date:1,
+        slot_time:1,
+        cancelled:1,
+        isCompleted:1,
+        payment:1,
+        amount:1,
+        doctor:1
+      }
+    }
+  ])
+
+  if(appoinments){
+    return res
+    .status(200)
+    .json({success:true,msg:'appoinments fetched successfully',appoinments})
+  }
+  else{
+    return res
+    .status(200)
+    .json({success:false,msg:'appoinments not found'})
+  }
+  } catch (error) {
+    return res
+    .status(400)
+    .json({success:false,msg:'error occured while fetching appoinments details'})
+  }
+}
+
+export { registerPatient, loginPatient, logoutPatient, getPatient,updatePatientInfo,bookAppoinment,getAllAppoinments };
