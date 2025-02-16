@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
+import {useSelector} from 'react-redux'
 
 const dateFormater = (date)=>{
   const months = ["","Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -22,13 +23,34 @@ const getAppoinments = async (setAppoinments) =>{
   }
 }
 
+const handleCancelAppoinment= async (id,setAppoinments) =>{
+  try {
+    const {data} = await axios.post('http://localhost:8000/api/v1/patient/cancel-appoinment',{appoinmentId:id},{ withCredentials: true })
+    if(data.success){
+      toast.success(data.msg,{
+        onClose:()=>{
+          getAppoinments(setAppoinments)
+        }
+      })
+    }
+    else{
+      toast.error(data.msg)
+    }
+  } catch (error) {
+    toast.error('error occured while cancelling appoinment')
+  }
+}
+
 const UserAppoinments = () => {
+  const authStatus = useSelector((state)=>state.auth.status)
   const [appoinments,setAppoinments] = useState([])
 
 
   useEffect(()=>{
-    getAppoinments(setAppoinments)
-  },[appoinments])
+    if(authStatus){
+      getAppoinments(setAppoinments)
+    }
+  },[authStatus,appoinments])
 
   if(appoinments.length>0){
     return(
@@ -54,6 +76,12 @@ const UserAppoinments = () => {
                   <span className="text-sm text-[#3C3C3C] font-medium">Fees: </span>{item.amount}
                 </p>
               </div>
+              <div></div>
+              <div className='flex flex-col gap-2 justify-end text-sm text-center'>
+                <button className='text-[#696969] sm:min-w-48 py-2 border rounded hover:bg-primary hover:text-white transition-all duration-300'>Pay Online</button>
+                {item.cancelled && <button className='sm:min-w-48 py-2 border border-red-500 rounded text-red-500'>Appoinment Cancelled</button>}
+                {!item.cancelled && <button onClick={(e)=>handleCancelAppoinment(item._id,setAppoinments)} className='text-[#696969] sm:min-w-48 py-2 border rounded hover:bg-red-600 hover:text-white transition-all duration-300'>Cancel Appoinment</button>}
+              </div>
             </div>
             ))}
         </div>
@@ -61,7 +89,9 @@ const UserAppoinments = () => {
     )
   }
   else{
-    <div className='font-bold text-primary'>appoinments fetching....</div>
+    return(
+      <div className='font-bold text-primary text-center'>appoinments fetching....</div>
+    )
   }
 }
 

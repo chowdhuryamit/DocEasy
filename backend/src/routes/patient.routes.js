@@ -1,6 +1,6 @@
 import {Router} from 'express'
 import { upload } from "../middlewares/multer.middleware.js";
-import { bookAppoinment, getAllAppoinments, getPatient, loginPatient, logoutPatient, registerPatient, updatePatientInfo } from '../controllers/patient.controllers.js';
+import { bookAppoinment, cancelAppoinment, getAllAppoinments, getPatient, loginPatient, logoutPatient, registerPatient, updatePatientInfo } from '../controllers/patient.controllers.js';
 import { verifyJWT } from '../middlewares/patient.middleware.js';
 
 const router=Router();
@@ -12,5 +12,6 @@ router.get('/get-patient',verifyJWT,getPatient);
 router.patch('/update-info',verifyJWT,upload.single('image'),updatePatientInfo)
 router.post('/book-appoinment',verifyJWT,bookAppoinment)
 router.get('/get-my-appoinments',verifyJWT,getAllAppoinments)
+router.post('/cancel-appoinment',verifyJWT,cancelAppoinment)
 
 export default router

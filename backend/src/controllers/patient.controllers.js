@@ -420,4 +420,99 @@ const getAllAppoinments = async (req,res) =>{
   }
 }
 
-export { registerPatient, loginPatient, logoutPatient, getPatient,updatePatientInfo,bookAppoinment,getAllAppoinments };
+//cancel appoinment
+const cancelAppoinment = async (req,res) =>{
+  if(!req.patient){
+    return res
+    .status(200)
+    .json({success:false,msg:'user not logged in'})
+  }
+
+  try {
+    const userData = await Patient.findById(req.patient._id)
+
+  if(!userData){
+    return res
+    .status(200)
+    .json({success:false,msg:'user not found'})
+  }
+
+  const {appoinmentId} = req.body
+
+  if(!appoinmentId){
+    return res
+    .status(200)
+    .json({success:false,msg:'appoinments id is required'})
+  }
+
+  const appoinmentDetails = await Appoinment.findById(appoinmentId)
+
+  if(!appoinmentDetails){
+    return res
+    .status(200)
+    .json({success:false,msg:'invalid appoinment id'})
+  }
+
+  if(!appoinmentDetails.patient.equals(userData._id)){
+    return res
+    .status(200)
+    .json({success:false,msg:'you are not authorized to cancel this appoinment'})
+  }
+
+  const doctorDetails = await Doctor.findById(appoinmentDetails.doc)
+
+  if(!doctorDetails){
+    return res
+    .status(200)
+    .json({success:false,msg:'doctor not found'})
+  }
+
+  let slots_booked = doctorDetails.slots_booked
+  if(Object.keys(slots_booked).includes(appoinmentDetails.slot_date)){
+    slots_booked[appoinmentDetails.slot_date] = slots_booked[appoinmentDetails.slot_date].filter((e)=>e!==appoinmentDetails.slot_time)
+  }
+  else{
+    return res
+    .status(200)
+    .json({success:false,msg:'you missed appoinment'})
+  }
+  
+
+  const updatedDoctorDetails = await Doctor.findByIdAndUpdate(doctorDetails._id,{
+    $set:{
+      slots_booked:slots_booked
+    }
+  },{new:true})
+
+  if(!updatedDoctorDetails){
+     return res
+     .status(200)
+     .json({success:false,msg:'booked slots is not released'})
+  }
+
+  const updatedAppoinmentsDetails = await Appoinment.findByIdAndUpdate(appoinmentDetails._id,{
+    $set:{
+      cancelled:true
+    }
+  },{new:true})
+
+  if(updatedAppoinmentsDetails){
+    return res
+    .status(200)
+    .json({success:true,msg:'Appoinment cancelled'})
+  }
+  else{
+    return res
+    .status(200)
+    .json({success:false,msg:'appoinment cancelation failed'})
+  }
+  } catch (error) {
+    console.log(error);
+    
+    return res
+    .status(400)
+    .json({success:false,msg:'error occured while cancelling appoinment'})
+  }
+}
+
+export { registerPatient, loginPatient, logoutPatient, getPatient,updatePatientInfo,bookAppoinment,getAllAppoinments,cancelAppoinment };
