@@ -328,7 +328,7 @@ const bookAppoinment = async (req,res) =>{
     if(response){
       return res
       .status(200)
-      .json({success:true,msg:'slot is successfully booked'})
+      .json({success:true,msg:'slot is successfully booked.If you want to cancel appoinment do it before 24 hrs'})
     }
     else{
       await Appoinment.findByIdAndDelete(appoinment._id)
@@ -459,6 +459,18 @@ const cancelAppoinment = async (req,res) =>{
     .json({success:false,msg:'you are not authorized to cancel this appoinment'})
   }
 
+  const [day,month,year] = appoinmentDetails.slot_date.split("_").map(Number)
+  const [hours,minutes] = appoinmentDetails.slot_time.split(":").map(Number)
+  const appoinmentDateTime = new Date(year,month-1,day,hours,minutes)
+  const currentDate = new Date()
+  const hoursDiff = (appoinmentDateTime - currentDate)/(1000 * 60 * 60)
+  
+  if(hoursDiff<24){
+    return res
+    .status(200)
+    .json({success:false,msg:'you have to cancel appoinment before 24hrs'})
+  }
+
   const doctorDetails = await Doctor.findById(appoinmentDetails.doc)
 
   if(!doctorDetails){
@@ -468,14 +480,7 @@ const cancelAppoinment = async (req,res) =>{
   }
 
   let slots_booked = doctorDetails.slots_booked
-  if(Object.keys(slots_booked).includes(appoinmentDetails.slot_date)){
-    slots_booked[appoinmentDetails.slot_date] = slots_booked[appoinmentDetails.slot_date].filter((e)=>e!==appoinmentDetails.slot_time)
-  }
-  else{
-    return res
-    .status(200)
-    .json({success:false,msg:'you missed appoinment'})
-  }
+  slots_booked[appoinmentDetails.slot_date] = slots_booked[appoinmentDetails.slot_date].filter((e)=>e!==appoinmentDetails.slot_time)
   
 
   const updatedDoctorDetails = await Doctor.findByIdAndUpdate(doctorDetails._id,{
@@ -514,5 +519,7 @@ const cancelAppoinment = async (req,res) =>{
     .json({success:false,msg:'error occured while cancelling appoinment'})
   }
 }
+
+
 
 export { registerPatient, loginPatient, logoutPatient, getPatient,updatePatientInfo,bookAppoinment,getAllAppoinments,cancelAppoinment };
