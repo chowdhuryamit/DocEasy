@@ -2,6 +2,8 @@ import { Doctor } from "../models/doctor.model.js";
 import jwt from 'jsonwebtoken'
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import fs from 'fs'
+import { Appoinment } from "../models/appoinment.model.js";
+import { Patient} from "../models/patient.model.js"
 
 
 //admin login
@@ -163,6 +165,7 @@ const getAdmin = async (req,res) =>{
   }
 }
 
+//get-doctor for admin
 const getDoctors = async (req,res) =>{
   if(!req.admin){
      return res
@@ -189,6 +192,7 @@ const getDoctors = async (req,res) =>{
   }
 }
 
+//change doctor availability
 const changeAvailability = async (req,res) =>{
   if(!req.admin){
     return res
@@ -236,11 +240,173 @@ const changeAvailability = async (req,res) =>{
   }
 }
 
+//get appoinments-details
+const getAppoinments = async (req,res) =>{
+  if(!req.admin){
+    return res
+    .status(200)
+    .json({success:false,msg:'you are not authorized to see appoinments details'})
+  }
+
+  try {
+    const {page=1,limit=5} = req.query
+    const parsedLimit = parseInt(limit, 10);
+    const pageSkip = (parseInt(page, 10) - 1) * parsedLimit;
+    const sortStage = {};
+    sortStage["createdAt"] = -1;
+
+    const appoinments = await Appoinment.aggregate([
+      {
+      $lookup:{
+        from:'patients',
+        localField:'patient',
+        foreignField:'_id',
+        as:'patient',
+        pipeline:[
+          {
+            $project:{
+              name:1,
+              photo:1,
+            }
+          }
+        ]
+      }
+    },
+    {
+      $lookup:{
+        from:'doctors',
+        localField:'doc',
+        foreignField:'_id',
+        as:'doc',
+        pipeline:[
+          {
+            $project:{
+              name:1,
+              picture:1
+            }
+          }
+        ]
+      }
+    },
+    {
+      $sort:sortStage
+    },
+    {
+      $skip:pageSkip
+    },
+    {
+      $limit:parsedLimit
+    }
+  ])
+
+  const totalDocuments = await Appoinment.countDocuments();
+  const totalPages = Math.ceil(totalDocuments / parsedLimit);
+
+  if(!appoinments){
+    return res
+    .status(200)
+    .json({success:false,msg:'appoinments not found'})
+  }
+  else{
+    return res
+    .status(200)
+    .json({success:true,msg:'appoinments found',appoinments,totalPages})
+  }
+  } catch (error) {
+    return res
+    .status(400)
+    .json({success:false,msg:'error ocured while fetching appoinments'})
+  }
+}
+
+//dash-board
+const getDashboard = async (req,res) =>{
+  if(!req.admin){
+    return res
+    .status(200)
+    .json({success:false,msg:'your are not authorized to see dashboard'})
+  }
+
+  try {
+    const doctors = await Doctor.find()
+
+  if(!doctors){
+    return res
+    .status(200)
+    .json({success:false,msg:'doctors data not found'})
+  }
+
+  const user = await Patient.find()
+
+  if(!user){
+    return res
+    .status(200)
+    .json({success:false,msg:'patient not found'})
+  }
+
+  const appoinments =await Appoinment.aggregate([
+    {
+      $lookup:{
+        from:'patients',
+        localField:'patient',
+        foreignField:'_id',
+        as:'patient',
+        pipeline:[
+          {
+            $project:{
+              name:1,
+              photo:1
+            }
+          }
+        ]
+      }
+    },
+    {
+      $project:{
+        patient:1,
+        slot_date:1,
+        slot_time:1
+      }
+    }
+  ])
+
+  if(!appoinments){
+    return res
+    .status(200)
+    .json({success:false,msg:'appoinments not found'})
+  }
+
+  const dashData={
+    total_doctors:doctors.length,
+    total_users:user.length,
+    total_appoinments:appoinments.length,
+    latest_appoinments:appoinments.reverse().slice(0,10)
+  }
+
+  if(dashData){
+    return res
+    .status(200)
+    .json({success:true,msg:'dashboard data found',dashData})
+  }
+  else{
+    return res
+    .status(200)
+    .json({success:false,msg:'dashboard data not found'})
+  }
+  } catch (error) {
+    return res
+    .status(200)
+    .json({success:false,msg:'error occured while fetching dashboard data'})
+  }
+}
+
 export{
     adminLogin,
     adminLogout,
     addDoctor,
     getAdmin,
     getDoctors,
-    changeAvailability
+    changeAvailability,
+    getAppoinments,
+    getDashboard
 }
