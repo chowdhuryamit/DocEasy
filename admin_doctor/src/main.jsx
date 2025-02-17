@@ -6,7 +6,7 @@ import store from './store/store.js'
 import { RouterProvider } from 'react-router-dom'
 import {createBrowserRouter} from 'react-router-dom'
 import App from './App.jsx'
-import { Adddoctor, AllAppoinments, Dashboard, DoctorAppoinments, DoctorDashboard, DoctorProfile, DoctorsList } from './pages/index.js'
+import { Adddoctor, AllAppoinments, Dashboard, DoctorAppoinments, DoctorDashboard, DoctorProfile, DoctorsList,DoctorDetails } from './pages/index.js'
 import {Home} from './components/index.js'
 
 const router = createBrowserRouter([{
@@ -36,6 +36,10 @@ const router = createBrowserRouter([{
       {
         path:'/all-appoinments',
         element:<AllAppoinments/>
+      },
+      {
+        path:'/doctor-details/:docId',
+        element:<DoctorDetails/>
       },
       {
         path:'/doctor-profile',

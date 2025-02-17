@@ -10,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const fetchDoctors = async (dispatch)=>{
   try {
-    const {data} = await axios.get('http://localhost:8000/api/v3/doctor/get-doctor',{ withCredentials: true })
+    const {data} = await axios.get('http://localhost:8000/api/v1/patient/get-doctor',{ withCredentials: true })
     if(data.success){
       dispatch(setDoctors({doctors:data.doctors}))
     }

@@ -3,11 +3,13 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import { updateDoctorAvailability } from '../../store/adminSlice'
+import { useNavigate } from 'react-router-dom'
 
 const DoctorsList = () => {
   const doctors =useSelector((state) => state.Admin.doctorsList)
-
+  
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const changeAvailability = async(id)=>{
     try {
@@ -32,7 +34,7 @@ const DoctorsList = () => {
       <div className='w-full flex flex-wrap gap-4 pt-5 gap-y-6'>
         {
           doctors.map((item,index)=>(
-            <div className='border border-[#C9D8FF] rounded-xl max-w-56 overflow-hidden cursor-pointer group' key={index}>
+            <div onClick={()=>navigate(`/doctor-details/${item._id}`)} className='border border-[#C9D8FF] rounded-xl max-w-56 overflow-hidden cursor-pointer group' key={index}>
               <img src={item.picture} alt="image" className='bg-[#EAEFFF] group-hover:bg-primary transition-all duration-500'/>
               <div className='p-4'>
                 <p className='text-[#262626] text-lg font-medium'>{item.name}</p>

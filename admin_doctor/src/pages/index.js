@@ -6,6 +6,7 @@ import Adddoctor from "./admin/Adddoctor.jsx";
 import AllAppoinments from "./admin/AllAppoinments.jsx";
 import Dashboard from "./admin/Dashboard.jsx";
 import DoctorsList from "./admin/DoctorsList";
+import DoctorDetails from "./admin/DoctorDetails.jsx";
 
 export {
     Login,
@@ -15,5 +16,6 @@ export {
     Adddoctor,
     AllAppoinments,
     Dashboard,
-    DoctorsList
+    DoctorsList,
+    DoctorDetails
 }
