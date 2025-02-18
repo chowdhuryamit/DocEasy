@@ -1,49 +1,36 @@
-Doctor Appointment Booking Web App
+# Doctor Appointment Booking Web App
 
-Overview
+## Overview
+This repository contains the backend logic for a Doctor Appointment Booking Web App. The application allows patients to book appointments with doctors, while doctors and administrators manage the scheduling and system operations.
 
-The Doctor Appointment Booking Web App allows patients to book appointments with doctors seamlessly. The system includes three primary roles:
+## Features
+### Patient
+- User registration and authentication
+- Browse and search for doctors
+- Book, reschedule, or cancel appointments
+- View appointment history
 
-Patients: Can register, log in, and book appointments with available doctors.
+### Doctor
+- Manage availability and schedule
+- View and manage patient appointments
+- Approve or decline appointment requests
 
-Doctors: Can manage their schedules and view patient appointments.
+### Admin
+- Manage patients and doctors
+- Oversee appointments and system functionality
+- View reports and analytics
 
-Admin: Can manage users, doctors, and oversee the system's functionality.
+## Usage
+- Open the browser and navigate to `http://localhost:3000/`
+- Register/Login as a patient, doctor, or admin
+- Book and manage appointments
 
-Features
+## Contributing
+Contributions are welcome! Please fork the repository and submit a pull request.
 
-For Patients:
+## License
+This project is licensed under the MIT License.
 
-User registration and login
+## Contact
+For any queries, reach out to `camit8546@gmail.com`
 
-Browse available doctors
-
-Book, reschedule, or cancel appointments
-
-View appointment history
-
-For Doctors:
-
-Manage availability and schedule
-
-View upcoming appointments
-
-Approve or decline appointment requests
-
-For Admin:
-
-Manage patient and doctor accounts
-
-Oversee appointments and system operations
-
-View reports and analytics
-
-Technologies Used
-
-Frontend: HTML, CSS, JavaScript (React)
-
-Backend: Node.js
-
-Database: MongoDB
-
-Authentication: JWT / OAuth
