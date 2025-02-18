@@ -1,12 +1,8 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
+import dateFormater from '../dateFormater'
 
-const dateFormater = (date)=>{
-  const months = ["","Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  const dateArray = date.split('_')
-  return dateArray[0]+" "+months[Number(dateArray[1])]+" "+dateArray[2]
-}
 
 const AllAppoinments = () => {
   const [appoinments,setAppoinments] = useState([])

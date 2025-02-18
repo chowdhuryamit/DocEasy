@@ -347,15 +347,15 @@ const getDashboard = async (req,res) =>{
   const appoinments =await Appoinment.aggregate([
     {
       $lookup:{
-        from:'patients',
-        localField:'patient',
+        from:'doctors',
+        localField:'doc',
         foreignField:'_id',
         as:'patient',
         pipeline:[
           {
             $project:{
               name:1,
-              photo:1
+              picture:1
             }
           }
         ]
@@ -365,7 +365,9 @@ const getDashboard = async (req,res) =>{
       $project:{
         patient:1,
         slot_date:1,
-        slot_time:1
+        slot_time:1,
+        cancelled:1,
+        isCompleted:1
       }
     }
   ])

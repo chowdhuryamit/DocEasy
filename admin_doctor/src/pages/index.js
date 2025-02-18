@@ -7,6 +7,7 @@ import AllAppoinments from "./admin/AllAppoinments.jsx";
 import Dashboard from "./admin/Dashboard.jsx";
 import DoctorsList from "./admin/DoctorsList";
 import DoctorDetails from "./admin/DoctorDetails.jsx";
+import dateFormater from './dateFormater.js'
 
 export {
     Login,
@@ -17,5 +18,6 @@ export {
     AllAppoinments,
     Dashboard,
     DoctorsList,
-    DoctorDetails
+    DoctorDetails,
+    dateFormater
 }
