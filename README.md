@@ -21,7 +21,7 @@ This repository contains the backend logic for a Doctor Appointment Booking Web 
 - View reports and analytics
 
 ## Usage
-- Open the browser and navigate to `http://localhost:3000/`
+- Open the browser and navigate to `http://localhost:8000/`
 - Register/Login as a patient, doctor, or admin
 - Book and manage appointments
 

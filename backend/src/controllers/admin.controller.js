@@ -302,7 +302,7 @@ const getAppoinments = async (req,res) =>{
   const totalDocuments = await Appoinment.countDocuments();
   const totalPages = Math.ceil(totalDocuments / parsedLimit);
 
-  if(!appoinments){
+  if(!appoinments||!totalDocuments){
     return res
     .status(200)
     .json({success:false,msg:'appoinments not found'})

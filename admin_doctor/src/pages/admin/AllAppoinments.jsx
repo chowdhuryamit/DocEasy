@@ -29,7 +29,7 @@ const AllAppoinments = () => {
     getAllAppoinments()
   },[page])
 
-  if(appoinments.length==0)
+  if(appoinments?.length==0)
    return( <p className="text-center text-primary">
     Featching Appoinments details...
     </p>)
@@ -48,7 +48,7 @@ const AllAppoinments = () => {
         <p>Appoinment Status</p>
       </div>
 
-      {appoinments.map((appointment, index) => (
+      {appoinments?.map((appointment, index) => (
         <div
           className="grid grid-cols-1 sm:grid-cols-[0.5fr_2fr_1.5fr_2fr_1fr_1fr_1fr] items-center gap-x-4 py-3 px-4 border-b hover:bg-gray-50"
           key={index}

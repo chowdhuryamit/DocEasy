@@ -417,13 +417,6 @@ const cancelAppoinment = async (req,res) =>{
   }
 
   try {
-    const userData = await Patient.findById(req.patient._id)
-
-  if(!userData){
-    return res
-    .status(200)
-    .json({success:false,msg:'user not found'})
-  }
 
   const {appoinmentId} = req.body
 
