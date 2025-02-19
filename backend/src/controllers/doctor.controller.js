@@ -1,6 +1,6 @@
 import { Doctor } from "../models/doctor.model.js";
 import { Appoinment } from "../models/appoinment.model.js";
-import mongoose from "mongoose";
+import mongoose, { set } from "mongoose";
 
 const doctorLogin = async (req, res) => {
   const { email, password } = req.body;
@@ -284,4 +284,81 @@ const cancelAppoinment = async (req, res) => {
     .json({success:false,msg:'error occured while cancelling appoinment'})
   }
 };
-export { doctorLogin, getDoctor, logout, getAppoinments, completeAppoinment,cancelAppoinment };
+
+const getDashboard = async (req,res) =>{
+  if(!req.doctor){
+    return res
+    .status(200)
+    .json({success:false,msg:'doctor is not logged in'})
+  }
+  try {
+    const appoinments = await Appoinment.aggregate([
+      {
+        $match:{
+          doc:new mongoose.Types.ObjectId(req.doctor._id)
+        }
+      },
+      {
+        $lookup:{
+          from:'patients',
+          localField:'patient',
+          foreignField:'_id',
+          as:'patient',
+          pipeline:[
+            {
+              $project:{
+                name:1,
+                photo:1,
+              }
+            }
+          ]
+        }
+      }
+    ])
+
+    if(!appoinments){
+      return res
+      .status(200)
+      .json({success:false,msg:'appoinments not found'})
+    }
+
+    let earnings=0;
+    let totalAppoinments=0;
+    let totalCompletedAppoinments=0;
+    let totalCancelledAppoinments=0;
+    appoinments.map((item)=>{
+      totalAppoinments++;
+      if(item.isCompleted){
+        earnings+=Number(item.amount);
+        totalCompletedAppoinments++;
+      }
+      if(item.cancelled){
+        totalCancelledAppoinments++;
+      }
+      else if(item.payment && !item.isCompleted){
+        earnings+=Number(item.amount);
+      }
+    })
+
+    let patients=new Set()
+    appoinments.map((item)=>{
+      patients.add(item.patient[0]._id.toString())
+    })
+    return res
+    .status(200)
+    .json({success:true,msg:'dashboard data fetched successfully',
+      earnings,
+      totalCancelledAppoinments,
+      totalCompletedAppoinments,
+      totalPatients:patients.size,
+      totalAppoinments,
+      pendingAppoinments:totalAppoinments-(totalCancelledAppoinments+totalCompletedAppoinments),     
+      topAppoinments:appoinments.reverse().slice(0,10)
+    })
+  } catch (error) {
+    return res
+    .status(200)
+    .json({success:false,msg:'error occured while fetching data'})
+  }
+}
+export { doctorLogin, getDoctor, logout, getAppoinments, completeAppoinment,cancelAppoinment,getDashboard };

@@ -17,8 +17,6 @@ const Dashboard = () => {
         { withCredentials: true }
       );
       if (data.success) {
-        console.log(data.dashData.latest_appoinments);
-
         setDashData(data.dashData);
       } else {
         toast.error(data.msg);
