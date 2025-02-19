@@ -1,25 +1,33 @@
-import jwt from 'jsonwebtoken'
+import jwt from "jsonwebtoken";
+import { Doctor } from "../models/doctor.model.js";
 
-const verifyJwtDoctor=async(req,res,next)=>{
-   const token=req.cookies._d
-   if(!token){
-    return res.status(401).json({msg:"Unauthorized request for doctor"})
-   }
+const verifyJwtDoctor = async (req, res, next) => {
+  const token = req.cookies._d;
+  if (!token) {
+    return res.status(200).json({success:false, msg: "Unauthorized request for doctor" });
+  }
 
-   const payload=jwt.verify(token,process.env.ACCESS_TOKEN_SECRET);
+  try {
+    const payload = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
-   if(!payload){
-    return res.status(401).json({msg:"Invalid token for doctor"})
-   }
+    if (!payload) {
+      return res.status(200).json({success:false, msg: "Invalid token for doctor" });
+    }
 
-   if(payload._id==process.env.DOCTOR_AUTH_SEC){
+    const doctor = await Doctor.findById(payload._id).select("-password -slots_booked")
+
+    if(!doctor){
+        return res
+        .status(200)
+        .json({success:true,msg:'doctor not found'})
+    }
+    req.doctor = doctor;
     next();
-   }
-   else{
-    return res.status(401).json({msg:"Invalid token"})
-   }
-}
+  } catch (error) {
+    return res
+    .status(400)
+    .json({success:false,msg:'error occured while validating doctor information'})
+  }
+};
 
-export{
-    verifyJwtDoctor
-}
+export { verifyJwtDoctor };

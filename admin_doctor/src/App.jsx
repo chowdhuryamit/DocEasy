@@ -15,15 +15,23 @@ const fetchDoctorDataForadmin = async (dispatch)=>{
     const {data} = await axios.get('http://localhost:8000/api/v2/admin/get-doctors',{ withCredentials: true })
 
     if(data.success){
-      dispatch(adminLogin({doctors:data.doctors}));
-      dispatch(doctorLogout());  
+      toast.success(data.msg,{
+        onClose:()=>{
+          dispatch(adminLogin({doctors:data.doctors}));
+          dispatch(doctorLogout());
+        }
+      })  
     }
     else{
-      dispatch(adminLogin({doctors:[]}));
-      dispatch(doctorLogout());
+      toast.warn(data.msg,{
+        onClose:()=>{
+          dispatch(adminLogout());
+          dispatch(doctorLogout());
+        }
+      })
     }
   } catch (error) {
-    dispatch(adminLogin({doctors:[]}));
+    dispatch(adminLogout());
     dispatch(doctorLogout());
   }
 }
@@ -43,20 +51,48 @@ const fetchAdminStatus = async (dispatch)=>{
   }
 }
 
+const fetchDoctorStatus = async (dispatch)=>{
+  try {
+    const {data} = await axios.get('http://localhost:8000/api/v3/doctor/get-doctor',{withCredentials:true})
+
+    if(data.success){
+      toast.success(data.msg,{
+        onClose:()=>{
+          dispatch(doctorLogin({doctorData:data.doctor}));
+          dispatch(adminLogout())
+        }
+      })
+    }
+    else{
+      toast.warn(data.mag,{
+        onClose:()=>{
+          dispatch(doctorLogout());
+          dispatch(adminLogout());
+        }
+      })
+    }
+  } catch (error) {
+    dispatch(doctorLogout());
+    dispatch(adminLogout());
+  }
+}
+
 function App() { 
   const dispatch = useDispatch()
   const adminStatus = useSelector((state) => state.Admin.status)
   const doctorStatus = useSelector((state) => state.Doctor.status)
 
   useEffect(()=>{
-    if(!adminStatus){
+    if(!adminStatus && !doctorStatus){
       fetchAdminStatus(dispatch)
     }
-  },[dispatch,adminStatus])
+  },[])
 
-  // useEffect(()=>{
-  //   fetchDoctorStatus()
-  // },[use])
+  useEffect(()=>{
+    if(!doctorStatus && !adminStatus){
+       fetchDoctorStatus(dispatch)
+    }
+  },[])
   
 
   if(adminStatus || doctorStatus){

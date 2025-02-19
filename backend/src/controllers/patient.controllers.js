@@ -136,21 +136,9 @@ const getPatient = async (req, res) => {
       .json({ success: false, msg: "patient is not logged in" });
   }
 
-  try {
-    const patientData = await Patient.findById(req.patient._id).select(
-      "-password"
-    );
-
-    if (!patientData) {
-      return res.status(200).json({ success: false, msg: "patient not found" });
-    }
-
-    return res
-      .status(200)
-      .json({ success: true, msg: "patient found", patientData });
-  } catch (error) {
-    return res.status(400).json({ success: false, msg: "patient not found" });
-  }
+  return res
+  .status(200)
+  .json({success:true,msg:'patient data fetched successfully',patientData:req.patient})
 };
 
 //update patient information

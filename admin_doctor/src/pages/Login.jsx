@@ -4,6 +4,7 @@ import {toast} from 'react-toastify'
 import { useDispatch } from 'react-redux';
 import { adminLogin } from '../store/adminSlice';
 import { useNavigate } from 'react-router-dom';
+import { doctorLogin } from '../store/doctorSlice';
 
 const fetchDoctorsDataForAdmin = async (dispatch,navigate)=>{
   try {
@@ -17,7 +18,7 @@ const fetchDoctorsDataForAdmin = async (dispatch,navigate)=>{
        })
     }
     else{
-      toast.error(data.msg,{
+      toast.warn(data.msg,{
         onClose:() =>{
           dispatch(adminLogin({doctors:[]}))
           navigate('/')
@@ -60,7 +61,7 @@ const Login = () => {
           else{
             setEmail('')
             setPassword('')
-            toast.error(data.msg)
+            toast.warn(data.msg)
           }
         } catch (error) {
           setEmail('')
@@ -69,7 +70,29 @@ const Login = () => {
         }
       }
       else{
+        try {
+          const {data} = await axios.post('http://localhost:8000/api/v3/doctor/login',{email,password},{withCredentials:true})
 
+          if(data.success){
+            setEmail('')
+            setPassword('')
+            toast.success(data.msg, {
+              onClose: () =>{
+                dispatch(doctorLogin({doctorData:data.doctor}))
+                navigate('/')
+              }
+            });
+          }
+          else{
+            setEmail('')
+            setPassword('')
+            toast.warn(data.msg)
+          }
+        } catch (error) {
+          setEmail('')
+          setPassword('')
+          toast.error('network error please try again')
+        }
       }
     }
     

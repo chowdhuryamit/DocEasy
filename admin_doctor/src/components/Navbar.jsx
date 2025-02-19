@@ -34,14 +34,30 @@ const Navbar = () => {
              })
           }
           else{
-           toast.error(data.msg)
+           toast.warn(data.msg)
           }
        } catch (error) {
          toast.error('Logout failed.try again')
        }
       }
       else{
-        
+        try {
+          const {data} = await axios.post('http://localhost:8000/api/v3/doctor/logout',{},{withCredentials:true})
+
+          if(data.success){
+            toast.success(data.msg,{
+              onClose:()=>{
+                dispatch(doctorLogout());
+                navigate('/')
+              }
+            })
+          }
+          else{
+            toast.warn(data.msg)
+          }
+        } catch (error) {
+          toast.error('Logout failed.try again')
+        }
       }
     }
 

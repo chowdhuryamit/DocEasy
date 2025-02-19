@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken'
 
 const doctorSchemma=new mongoose.Schema({
     name:{
@@ -72,6 +73,17 @@ doctorSchemma.pre('save',async function(next){
 doctorSchemma.methods.isPasswordCorrect=async function(password){
     return await bcrypt.compare(password,this.password);
 }
+
+doctorSchemma.methods.generateAccessToken=async function (){
+    return jwt.sign({
+        _id:this._id
+    },
+    process.env.ACCESS_TOKEN_SECRET,
+    {
+        expiresIn:process.env.ACCESS_TOKEN_EXPIRY
+    })
+}
+
 
 const Doctor=mongoose.model('doctor',doctorSchemma);
 
