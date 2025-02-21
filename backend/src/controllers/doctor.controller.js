@@ -361,4 +361,6 @@ const getDashboard = async (req,res) =>{
     .json({success:false,msg:'error occured while fetching data'})
   }
 }
+
+
 export { doctorLogin, getDoctor, logout, getAppoinments, completeAppoinment,cancelAppoinment,getDashboard };
