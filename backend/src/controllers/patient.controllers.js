@@ -434,7 +434,7 @@ const cancelAppoinment = async (req,res) =>{
     .json({success:false,msg:'invalid appoinment id'})
   }
 
-  if(!appoinmentDetails.patient.equals(userData._id)){
+  if(!appoinmentDetails.patient.equals(req.patient._id)){
     return res
     .status(200)
     .json({success:false,msg:'you are not authorized to cancel this appoinment'})
@@ -493,8 +493,6 @@ const cancelAppoinment = async (req,res) =>{
     .json({success:false,msg:'appoinment cancelation failed'})
   }
   } catch (error) {
-    console.log(error);
-    
     return res
     .status(400)
     .json({success:false,msg:'error occured while cancelling appoinment'})

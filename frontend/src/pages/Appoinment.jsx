@@ -69,6 +69,7 @@ const Appoinment = () => {
             scrollTo(0,0)
           }
         });
+        return;
      }
 
      const date = docSlots[slotIndex][0].dateTime

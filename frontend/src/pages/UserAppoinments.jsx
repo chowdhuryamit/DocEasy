@@ -37,6 +37,7 @@ const handleCancelAppoinment= async (id,setAppoinments) =>{
       toast.error(data.msg)
     }
   } catch (error) {
+    
     toast.error('error occured while cancelling appoinment')
   }
 }
