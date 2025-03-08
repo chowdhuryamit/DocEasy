@@ -6,6 +6,7 @@ import UserProfile from "./UserProfile";
 import Home from "./Home";
 import Signup from "./Signup";
 import Appoinment from "./Appoinment";
+import NotfoundPage from "./NotfoundPage";
 
 export{
   About,
@@ -16,4 +17,5 @@ export{
   Home,
   Signup,
   Appoinment,
+  NotfoundPage
 }
