@@ -7,6 +7,7 @@ import Home from "./Home";
 import Signup from "./Signup";
 import Appoinment from "./Appoinment";
 import NotfoundPage from "./NotfoundPage";
+import Ai from "./Ai"
 
 export{
   About,
@@ -17,5 +18,6 @@ export{
   Home,
   Signup,
   Appoinment,
-  NotfoundPage
+  NotfoundPage,
+  Ai
 }

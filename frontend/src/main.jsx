@@ -6,7 +6,7 @@ import {createBrowserRouter} from 'react-router-dom'
 import { RouterProvider } from 'react-router-dom'
 import {Provider} from 'react-redux'
 import store from './store/store.js'
-import {About, Appoinment, Contact, Doctors, Home,Signup, UserAppoinments, UserProfile,NotfoundPage} from './pages/index.js'
+import {About, Appoinment, Contact, Doctors, Home,Signup, UserAppoinments, UserProfile,NotfoundPage,Ai} from './pages/index.js'
 
 const router=createBrowserRouter([{
   path:'/',
@@ -47,6 +47,10 @@ const router=createBrowserRouter([{
     {
       path:'/my-profile',
       element:<UserProfile/>
+    },
+    {
+      path:'/ask-ai',
+      element:<Ai/>
     },
     {
       path:'/*',

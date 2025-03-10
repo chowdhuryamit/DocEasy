@@ -53,6 +53,12 @@ const Navbar = () => {
         <NavLink to={'/contact'} className={({isActive}) =>`${isActive?'text-orange-500':'text-primary'} hover:text-orange-500 duration-300`}>
           <li className='py-1'>CONTACT-US</li>
         </NavLink>
+        {
+          authStatus ===true ?
+          <NavLink to={'/ask-ai'}>
+            <li className='py-1 bg-sky-400 rounded-md p-2 text-white hover:scale-110 duration-150'>Ask-Ai</li>
+          </NavLink> :null
+        }
       </ul>
       <div className='flex items-center gap-4 '>
         {authStatus===true
