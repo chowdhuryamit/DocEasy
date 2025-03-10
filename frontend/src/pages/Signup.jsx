@@ -63,6 +63,7 @@ const Signup = () => {
         }
      }
   }
+
   return (
     <>
     <form onSubmit={onSubmitHandler} className='min-h-[80vh] flex items-center shadow-xl'>
@@ -89,6 +90,7 @@ const Signup = () => {
           ? <p>Already have an account? <span onClick={() => setState('login')} className='text-primary underline cursor-pointer'>Login here</span></p>
           : <p>Create an new account? <span onClick={() => setState('signup')} className='text-primary underline cursor-pointer'>Click here</span></p>
         }
+       
       </div>
     </form>
     </>
