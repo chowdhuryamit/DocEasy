@@ -21,7 +21,7 @@ const DoctorAppoinments = () => {
         setTotalPages(data.totalPages)
       }
       else{
-        toast.warn(data,msg)
+        toast.warn(data.msg)
       }
     } catch (error) {
       toast.error('error occured while fetching appoinments deatils')
