@@ -89,6 +89,12 @@ const Navbar = () => {
              <NavLink onClick={()=>setshowmenu(false)} to={'/doctors'}><p className='px-4 py-2 rounded full inline-block'>All-Doctors</p></NavLink>
              <NavLink onClick={()=>setshowmenu(false)} to={'/about'}><p className='px-4 py-2 rounded full inline-block'>About-Us</p></NavLink>
              <NavLink onClick={()=>setshowmenu(false)} to={'/contact'}><p className='px-4 py-2 rounded full inline-block'>Contact-Us</p></NavLink>
+             {
+              authStatus ===true ?
+              <NavLink onClick={()=>setshowmenu(false)} to={'/ask-ai'}>
+                <p className='px-4 py-2  full inline-block bg-sky-400 rounded-md p-2 text-white hover:scale-110 duration-150'>Ask-Ai</p>
+              </NavLink> :null
+             }
           </ul>
         </div>
       </div>
