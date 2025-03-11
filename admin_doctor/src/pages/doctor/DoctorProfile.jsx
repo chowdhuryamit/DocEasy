@@ -1,23 +1,68 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import axios from 'axios'
+import { toast } from "react-toastify";
+import { doctorLogin } from "../../store/doctorSlice";
 
 const DoctorProfile = () => {
   const [isEdit, setIsEdit] = useState(false);
 
   const doctorData = useSelector((state) => state.Doctor.doctorData);
+  const dispatch = useDispatch();
   
   const [profileDate, setProfileData] = useState({
-    about: doctorData.about,
-    fees: doctorData.fees,
-    address: doctorData.address,
-    availability: doctorData.availability,
+    about:"",
+    fees:"",
+    address:"",
+    availability:"",
+    email:"",
+    phone:"",
+    experience:""
   });
-
-  console.log(profileDate);
   
   const updateProfile = async () => {
+    try {
+      const formData = new FormData();
+      formData.append('about',profileDate.about);
+      formData.append('fees',profileDate.fees);
+      formData.append('address',profileDate.address);
+      formData.append('availability',profileDate.availability);
+      formData.append('email',profileDate.email);
+      formData.append('phone',profileDate.phone);
+      formData.append('experience',profileDate.experience);
 
+      const {data} = await axios.patch('http://localhost:8000/api/v3/doctor/update-doctor',formData,{ withCredentials: true })
+
+      if(data.success){
+        toast.success(data.msg,{
+          onClose:()=>{
+            setIsEdit(false);
+            dispatch(doctorLogin({doctorData:data.doctor}))
+          }
+        })
+      }
+      else{
+        toast.error(data.msg)
+      }
+    } catch (error) {
+      toast.error('network error try again')
+    }
   };
+
+  useEffect(()=>{
+   if(doctorData){
+    setProfileData({
+      about: doctorData.about,
+      fees: doctorData.fees,
+      address: doctorData.address,
+      availability: doctorData.availability,
+      email:doctorData.email,
+      phone:doctorData.phone,
+      experience:doctorData.experience
+    })
+   }
+  },[doctorData])
+  
 
   if (!doctorData)
     return (
@@ -46,9 +91,23 @@ const DoctorProfile = () => {
           <p>
             {doctorData.degree} - {doctorData.specialization}
           </p>
-          <button className="py-0.5 px-2 border text-xs rounded-full">
-            {doctorData.experience}
-          </button>
+          {isEdit ? (
+              <input
+                type="text"
+                onChange={(e) =>
+                  setProfileData((prev) => ({
+                    ...prev,
+                    experience: e.target.value,
+                  }))
+                }
+                className="border rounded p-1 w-24"
+                value={profileDate.experience}
+              />
+            ) : (
+              <button className="py-0.5 px-2 border text-xs rounded-full">
+                {profileDate.experience}
+              </button>
+            )}  
         </div>
 
         {/* About */}
@@ -67,10 +126,10 @@ const DoctorProfile = () => {
                 }
                 className="w-full outline-primary p-2 border rounded-lg"
                 rows={6}
-                value={doctorData.about}
+                value={profileDate.about}
               />
             ) : (
-              doctorData.about
+              profileDate.about
             )}
           </p>
         </div>
@@ -90,10 +149,10 @@ const DoctorProfile = () => {
                   }))
                 }
                 className="border rounded p-1 w-24"
-                value={doctorData.fees}
+                value={profileDate.fees}
               />
             ) : (
-              doctorData.fees
+              profileDate.fees
             )}
           </span>
         </p>
@@ -112,10 +171,54 @@ const DoctorProfile = () => {
                   }))
                 }
                 className="border rounded p-1 w-full sm:w-auto"
-                value={doctorData.address}
+                value={profileDate.address}
               />
             ) : (
-              doctorData.address
+              profileDate.address
+            )}
+          </p>
+        </div>
+        
+        {/* email */}
+        <div className="flex flex-wrap items-center gap-2 py-2">
+          <p className="font-medium">Email:</p>
+          <p className="text-sm">
+            {isEdit ? (
+              <input
+                type="email"
+                onChange={(e) =>
+                  setProfileData((prev) => ({
+                    ...prev,
+                    email: e.target.value,
+                  }))
+                }
+                className="border rounded p-1 w-full sm:w-auto"
+                value={profileDate.email}
+              />
+            ) : (
+              profileDate.email
+            )}
+          </p>
+        </div>
+
+        {/* email */}
+        <div className="flex flex-wrap items-center gap-2 py-2">
+          <p className="font-medium">Phone:</p>
+          <p className="text-sm">
+            {isEdit ? (
+              <input
+                type="text"
+                onChange={(e) =>
+                  setProfileData((prev) => ({
+                    ...prev,
+                    phone: e.target.value,
+                  }))
+                }
+                className="border rounded p-1 w-full sm:w-auto"
+                value={profileDate.phone}
+              />
+            ) : (
+              profileDate.phone
             )}
           </p>
         </div>
@@ -128,10 +231,10 @@ const DoctorProfile = () => {
               isEdit &&
               setProfileData((prev) => ({
                 ...prev,
-                available: !prev.available,
+                availability: !prev.availability,
               }))
             }
-            checked={doctorData.available}
+            checked={profileDate.availability}
           />
           <label className="text-sm">Available</label>
         </div>

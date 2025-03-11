@@ -14,7 +14,7 @@ const verifyJwtDoctor = async (req, res, next) => {
       return res.status(200).json({success:false, msg: "Invalid token for doctor" });
     }
 
-    const doctor = await Doctor.findById(payload._id).select("-password")
+    const doctor = await Doctor.findById(payload._id).select("-password -createdAt -updatedAt")
 
     if(!doctor){
         return res

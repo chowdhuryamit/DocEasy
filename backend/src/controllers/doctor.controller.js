@@ -13,13 +13,13 @@ const doctorLogin = async (req, res) => {
   }
 
   try {
-    const doctor = await Doctor.findOne({ email });
+    const doctorInfo = await Doctor.findOne({ email });
 
-    if (!doctor) {
+    if (!doctorInfo) {
       return res.status(200).json({ success: false, msg: "doctor not found" });
     }
 
-    const isPasswordCorrect = await doctor.isPasswordCorrect(password);
+    const isPasswordCorrect = await doctorInfo.isPasswordCorrect(password);
 
     if (!isPasswordCorrect) {
       return res
@@ -27,7 +27,7 @@ const doctorLogin = async (req, res) => {
         .json({ success: false, msg: "incorrect password" });
     }
 
-    const accessToken = await doctor.generateAccessToken();
+    const accessToken = await doctorInfo.generateAccessToken();
 
     if (!accessToken) {
       return res
@@ -41,8 +41,10 @@ const doctorLogin = async (req, res) => {
       sameSite: "lax",
     };
 
-    doctor.toObject();
+    const doctor=doctorInfo.toObject();
     delete doctor.password;
+    delete doctor.createdAt;
+    delete doctor.updatedAt;
 
     if (doctor) {
       return res
@@ -71,7 +73,7 @@ const getDoctor = async (req, res) => {
       .status(200)
       .json({ success: false, msg: "doctor not logged in" });
   }
-
+  
   return res.status(200).json({
     success: true,
     msg: "doctor data fetched successfully",
@@ -396,5 +398,62 @@ const getDashboard = async (req,res) =>{
   }
 }
 
+const updateDoctorInfo = async (req,res) =>{
+  try {
+    if(!req.doctor){
+      return res
+      .status(200)
+      .json({success:false,msg:'doctor not logged in'})
+    }
+  
+    const {about,fees,address,availability,email,phone,experience} = req.body;
 
-export { doctorLogin, getDoctor, logout, getAppoinments, completeAppoinment,cancelAppoinment,getDashboard };
+    if(about===""||fees===""||address===""||availability===""||email===""||phone===""||experience===""){
+      return res
+      .status(200)
+      .json({success:false,msg:'all fields are required'})
+    }
+  
+    const existingDoctor = await Doctor.findOne({
+      $or:[
+        {email:email},
+        {phone:phone}
+      ]})
+    
+    if(existingDoctor && !existingDoctor._id.equals(req.doctor._id)){
+      return res
+      .status(200)
+      .json({success:false,msg:'email or phone already in use'})
+    }  
+  
+    const updatedInfo = await Doctor.findByIdAndUpdate(req.doctor._id,{
+      $set:{
+        about:about,
+        fees:fees,
+        address:address,
+        availability:availability,
+        email:email,
+        phone:phone,
+        experience:experience
+      }
+    },{new:true}).select('-password -createdAt -updatedAt')
+  
+    if(!updatedInfo){
+      return res
+      .status(200)
+      .json({success:false,msg:'information not updated successfully'})
+    }
+    else{
+      return res
+      .status(200)
+      .json({success:true,msg:'information updated successfully',doctor:updatedInfo})
+    }
+  } catch (error) {
+    return res
+    .status(400)
+    .json({success:false,msg:'error occured while updating information'})
+  }
+}
+
+
+export { doctorLogin, getDoctor, logout, getAppoinments, completeAppoinment,cancelAppoinment,getDashboard,updateDoctorInfo };
