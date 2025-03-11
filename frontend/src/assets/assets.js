@@ -21,7 +21,6 @@ import General_physician from './General_physician.svg'
 import Gynecologist from './Gynecologist.svg'
 import Neurologist from './Neurologist.svg'
 import Pediatricians from './Pediatricians.svg'
-import ai_icon from './ai_icon.png'
 import ai_background from './ai_background.jpg'
 
 
@@ -43,7 +42,6 @@ export const assets = {
     upload_icon,
     stripe_logo,
     razorpay_logo,
-    ai_icon,
     ai_background
 }
 

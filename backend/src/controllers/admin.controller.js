@@ -4,6 +4,7 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import fs from 'fs'
 import { Appoinment } from "../models/appoinment.model.js";
 import { Patient} from "../models/patient.model.js"
+import { Earnings } from "../models/earnings.model.js";
 
 
 //admin login
@@ -367,7 +368,8 @@ const getDashboard = async (req,res) =>{
         slot_date:1,
         slot_time:1,
         cancelled:1,
-        isCompleted:1
+        isCompleted:1,
+        amount:1,
       }
     }
   ])
@@ -378,10 +380,22 @@ const getDashboard = async (req,res) =>{
     .json({success:false,msg:'appoinments not found'})
   }
 
+  const earnings = await Earnings.find();
+
+  if(!earnings){
+    return res
+    .status(200)
+    .json({success:true,msg:'earnings not fetched successfully'})
+  }
+  
+  let amount = earnings.reduce((sum,item)=>sum+Number(item.Earnings),0)
+  
+
   const dashData={
     total_doctors:doctors.length,
     total_users:user.length,
     total_appoinments:appoinments.length,
+    total_earnings:amount,
     latest_appoinments:appoinments.reverse().slice(0,10)
   }
 

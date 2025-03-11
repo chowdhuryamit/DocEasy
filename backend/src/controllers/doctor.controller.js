@@ -1,6 +1,7 @@
 import { Doctor } from "../models/doctor.model.js";
 import { Appoinment } from "../models/appoinment.model.js";
 import mongoose, { set } from "mongoose";
+import { Earnings } from "../models/earnings.model.js";
 
 const doctorLogin = async (req, res) => {
   const { email, password } = req.body;
@@ -105,7 +106,7 @@ const getAppoinments = async (req, res) => {
   }
 
   try {
-    const { page = 1, limit = 10 } = req.query;
+    const { page = 1, limit = 5 } = req.query;
     const parsedLimit = parseInt(limit, 10);
     const pageSkip = (parseInt(page, 10) - 1) * parsedLimit;
     const sortStage = {};
@@ -216,6 +217,36 @@ const completeAppoinment = async (req, res) => {
         .status(200)
         .json({ success: false, msg: "appoinment is not completed" });
     } else {
+
+      const earnings = await Earnings.findOne({docId:new mongoose.Types.ObjectId(req.doctor._id)})
+
+      if(earnings){
+       let amount = Number(earnings.Earnings)
+       amount+=Number(appoinmentDetails.amount)
+        const newEarnings = await Earnings.findByIdAndUpdate(earnings._id,{
+          $set:{
+            Earnings:String(amount)
+          }
+        })
+        if(!newEarnings){
+          return res
+          .status(200)
+          .json({success:false,msg:'earnings is not updated successfully'})
+        }
+      }
+      else{
+        const newEarnings = await Earnings.create({
+          docId:req.doctor._id,
+          Earnings:appoinmentDetails.amount
+        })
+
+        if(!newEarnings){
+          return res
+          .status(200)
+          .json({success:false,msg:'earnings is not updated successfully'})
+        }
+      }
+      
       return res
         .status(200)
         .json({ success: true, msg: "Appoinment successfully completed" });
@@ -329,14 +360,10 @@ const getDashboard = async (req,res) =>{
     appoinments.map((item)=>{
       totalAppoinments++;
       if(item.isCompleted){
-        earnings+=Number(item.amount);
         totalCompletedAppoinments++;
       }
       if(item.cancelled){
         totalCancelledAppoinments++;
-      }
-      else if(item.payment && !item.isCompleted){
-        earnings+=Number(item.amount);
       }
     })
 
@@ -344,6 +371,13 @@ const getDashboard = async (req,res) =>{
     appoinments.map((item)=>{
       patients.add(item.patient[0]._id.toString())
     })
+     
+    const earning = await Earnings.findOne({docId:new mongoose.Types.ObjectId(req.doctor._id)})
+
+    if(earning){
+      earnings=earning.Earnings
+    }
+
     return res
     .status(200)
     .json({success:true,msg:'dashboard data fetched successfully',
