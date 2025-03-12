@@ -8,6 +8,8 @@ const DoctorProfile = () => {
   const [isEdit, setIsEdit] = useState(false);
 
   const doctorData = useSelector((state) => state.Doctor.doctorData);
+  console.log(doctorData);
+  
   const dispatch = useDispatch();
   
   const [profileDate, setProfileData] = useState({

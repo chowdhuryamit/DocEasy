@@ -95,6 +95,20 @@ const Login = () => {
         }
       }
     }
+
+    const handleForgetPassword = async ()=>{
+     try {
+      const {data} = await axios.post('http://localhost:8000/api/v3/doctor/forget-password',{email},{withCredentials:true})
+      if(data.success){
+        toast.success(data.msg)
+      }
+      else{
+        toast.warn(data.msg)
+      }
+     } catch (error) {
+      toast.error('error ocured while reset password')
+     }
+    }
     
   return (
     <form onSubmit={handlesubmit} className='min-h-[80vh] flex items-center'>
@@ -108,6 +122,9 @@ const Login = () => {
           <p>Password : </p>
           <input onChange={(e) =>setPassword(e.target.value)} type="password" className='border border-[#DADADA] rounded w-full p-2 mt-1' value={password} required/>
         </div>
+        {
+          state ==='Doctor' && <p onClick={handleForgetPassword} className='text-red-600 cursor-pointer'>Forget Password</p>
+        }
         <button className='bg-primary text-white w-full py-2 rounded-md text-base'>Login</button>
         {
           state === 'Admin'

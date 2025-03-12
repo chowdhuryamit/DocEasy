@@ -6,8 +6,9 @@ import store from './store/store.js'
 import { RouterProvider } from 'react-router-dom'
 import {createBrowserRouter} from 'react-router-dom'
 import App from './App.jsx'
-import { Adddoctor, AllAppoinments, Dashboard, DoctorAppoinments, DoctorDashboard, DoctorProfile, DoctorsList,DoctorDetails } from './pages/index.js'
+import { Adddoctor, AllAppoinments, Dashboard, DoctorAppoinments, DoctorDashboard, DoctorProfile, DoctorsList,DoctorDetails,ResetPassword } from './pages/index.js'
 import {Home} from './components/index.js'
+import { ToastContainer } from 'react-toastify';
 
 const router = createBrowserRouter([{
     path:'/',
@@ -48,9 +49,14 @@ const router = createBrowserRouter([{
       {
         path:'/doctor-appoinments',
         element:<DoctorAppoinments/>
-      }
+      },
     ]
-}])
+},
+{
+  path:'/reset-password/doctor/:token',
+  element:<><ToastContainer/><ResetPassword/></>
+}
+])
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>

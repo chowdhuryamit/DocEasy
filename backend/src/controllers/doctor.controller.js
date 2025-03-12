@@ -2,6 +2,8 @@ import { Doctor } from "../models/doctor.model.js";
 import { Appoinment } from "../models/appoinment.model.js";
 import mongoose, { set } from "mongoose";
 import { Earnings } from "../models/earnings.model.js";
+import jwt from 'jsonwebtoken'
+import nodemailer from 'nodemailer'
 
 const doctorLogin = async (req, res) => {
   const { email, password } = req.body;
@@ -151,7 +153,7 @@ const getAppoinments = async (req, res) => {
       doc: new mongoose.Types.ObjectId(req.doctor._id),
     });
     const totalPages = Math.ceil(totalDocuments / parsedLimit);
-
+    
     if (!appoinments || !totalDocuments) {
       return res
         .status(200)
@@ -165,8 +167,6 @@ const getAppoinments = async (req, res) => {
       });
     }
   } catch (error) {
-    console.log(error);
-
     return res.status(400).json({
       success: false,
       msg: "error occured while fetching appoinments details",
@@ -455,5 +455,110 @@ const updateDoctorInfo = async (req,res) =>{
   }
 }
 
+const forgetPassword =async (req,res) =>{
+  try {
+    const {email} = req.body;
+    if(!email){
+      return res
+      .status(200)
+      .json({success:false,msg:'email is required'})
+    }
 
-export { doctorLogin, getDoctor, logout, getAppoinments, completeAppoinment,cancelAppoinment,getDashboard,updateDoctorInfo };
+    const existingDoctor = await Doctor.findOne({email})
+
+    if(!existingDoctor){
+      return res
+      .status(200)
+      .json({success:false,msg:'Doctor does not exist with this email'})
+    }
+
+    const token = jwt.sign({email,timeStamp:Date.now()},process.env.DOCTOR_TOKEN_SECRET,{expiresIn:'10m'})
+
+    const transporter = nodemailer.createTransport({
+      service:'gmail',
+      secure:true,
+      auth:{
+        user:process.env.MY_GMAIL,
+        pass:process.env.MY_PASSWORD
+      }
+    })
+
+    const receiver = {
+      from: 'doceasy442@gmail.com',
+      to: email,
+      subject: 'Password Reset Request - Secure Action Required',
+      text: `Dear User,
+    
+    We received a request to reset your password. If you made this request, please click the link below to proceed:
+    
+    🔗 Reset Password: ${process.env.CLIENT_URL}/doctor/${token}
+    
+    This link is one time use only.
+    
+    ⚠️ **Security Notice:**
+    - **DO NOT** share this link with anyone, including support staff.
+    - If you did **not** request a password reset, **DO NOT CLICK** on the link.
+    - If you suspect unauthorized activity, **change your password immediately** and contact support at **support@doceasy.com**.
+    
+    For added security, we recommend enabling **two-factor authentication (2FA)** if available.
+    
+    Stay safe,  
+    **DocEasy Security Team**
+    `,
+    };
+    
+    
+
+    await transporter.sendMail(receiver)
+
+    return res
+    .status(200)
+    .json({success:true,msg:'password reset link send in your registered email'})
+  } catch (error) {
+    return res
+    .status(200)
+    .json({success:false,msg:'error occured while sending email'})
+  }
+}
+
+const passwordReset = async (req,res) =>{
+  try {
+    const {token,password} = req.body
+
+    if(!token || !password){
+      return res
+      .status(200)
+      .json({success:false,msg:'token and password are required'})
+    }
+
+    const payload = jwt.verify(token,process.env.DOCTOR_TOKEN_SECRET)
+
+    if(!payload){
+      return res
+      .status(200)
+      .json({success:false,msg:'invalid credentials'})
+    }
+
+    const existingDoctor = await Doctor.findOne({email:payload.email})
+
+    if(!existingDoctor){
+      return res
+      .status(200)
+      .json({success:false,msg:'doctor does not exist'})
+    }
+
+    existingDoctor.password = password
+    existingDoctor.save()
+
+    return res
+    .status(200)
+    .json({success:true,msg:'password updated successfully'})
+  } catch (error) {
+    return res
+    .status(400)
+    .json({success:false,msg:'something went wrong while updating password'})
+  }
+}
+
+
+export { doctorLogin, getDoctor, logout, getAppoinments, completeAppoinment,cancelAppoinment,getDashboard,updateDoctorInfo,forgetPassword,passwordReset };

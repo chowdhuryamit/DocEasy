@@ -288,7 +288,7 @@ const bookAppoinment = async (req,res) =>{
     Object.keys(slots_booked).forEach(date => {
       const [day,month,year] = date.split('_').map(Number)
       const bookedDate = new Date(year,month-1,day)
-      if (bookedDate<currentDateObj) {
+      if (bookedDate<currentDateObj+1) {
         delete slots_booked[date]
       }
     })
