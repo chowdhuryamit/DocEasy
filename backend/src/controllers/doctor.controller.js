@@ -533,7 +533,7 @@ const passwordReset = async (req,res) =>{
 
     const payload = jwt.verify(token,process.env.DOCTOR_TOKEN_SECRET)
 
-    if(!payload){
+    if(!payload || !payload.email){
       return res
       .status(200)
       .json({success:false,msg:'invalid credentials'})
@@ -549,6 +549,24 @@ const passwordReset = async (req,res) =>{
 
     existingDoctor.password = password
     existingDoctor.save()
+
+    const transporter = nodemailer.createTransport({
+      service:'gmail',
+      secure:true,
+      auth:{
+        user:process.env.MY_GMAIL,
+        pass:process.env.MY_PASSWORD
+      }
+    })
+
+    const mailOptions = {
+      from: 'doceasy442@gmail.com',
+      to:payload.email,
+      subject: 'Your Password Has Been Changed for DocEasy',
+      text: `Your password was successfully changed. If you did not request this change, please contact our support team immediately or change your password immediately.`
+    };
+
+    await transporter.sendMail(mailOptions)
 
     return res
     .status(200)

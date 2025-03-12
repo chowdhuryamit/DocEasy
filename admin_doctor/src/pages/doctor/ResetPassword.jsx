@@ -34,6 +34,8 @@ const ResetPassword = () => {
         toast.warn(data.msg)
       }
     } catch (error) {
+      console.log(error);
+      
       toast.error('something went wrong while updating password')
     }
   };
