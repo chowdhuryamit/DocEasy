@@ -7,6 +7,10 @@ import { RouterProvider } from 'react-router-dom'
 import {Provider} from 'react-redux'
 import store from './store/store.js'
 import {About, Appoinment, Contact, Doctors, Home,Signup, UserAppoinments, UserProfile,NotfoundPage,Ai} from './pages/index.js'
+import Lobby from './screens/Lobby.jsx'
+import Room from './screens/Room.jsx'
+import { SocketProvider } from './socketContext/SocketProvider.jsx'
+
 
 const router=createBrowserRouter([{
   path:'/',
@@ -53,6 +57,14 @@ const router=createBrowserRouter([{
       element:<Ai/>
     },
     {
+      path:'/user/virtual/appointment/',
+      element:<Lobby />
+    },
+    {
+      path:'/user/virtual/appointment/:roomId',
+      element:<Room />
+    },
+    {
       path:'/*',
       element:<NotfoundPage/>
     }
@@ -62,8 +74,10 @@ const router=createBrowserRouter([{
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <Provider store={store}>
+    <SocketProvider>
+      <Provider store={store}>
        <RouterProvider router={router}/>
-    </Provider>
+      </Provider>
+    </SocketProvider>  
   </React.StrictMode>,
 )

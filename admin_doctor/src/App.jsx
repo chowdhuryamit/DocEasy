@@ -9,6 +9,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { adminLogin,adminLogout } from './store/adminSlice.js';
 import { doctorLogin,doctorLogout } from './store/doctorSlice.js';
+import { SocketProvider } from './socketContext/SocketProvider.jsx';
 
 const fetchDoctorDataForadmin = async (dispatch)=>{
   try {
@@ -95,7 +96,7 @@ function App() {
   },[])
   
 
-  if(adminStatus || doctorStatus){
+  if(adminStatus){
     return (
       <div className='bg-[#F8F9FD]'>
         <ToastContainer />
@@ -104,6 +105,20 @@ function App() {
           <Sidebar/>
           <Outlet/>
         </div>
+      </div>
+    )
+  }
+  else if (doctorStatus) {
+    return (
+      <div className='bg-[#F8F9FD]'>
+        <SocketProvider>
+        <ToastContainer />
+        <Navbar/>
+        <div className='flex items-start'>
+          <Sidebar/>
+          <Outlet/>
+        </div>
+        </SocketProvider>
       </div>
     )
   }

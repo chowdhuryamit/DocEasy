@@ -51,7 +51,7 @@ const App = () => {
 
   return (
       <>
-      <ToastContainer/>
+        <ToastContainer/>
         <Navbar/>
         <Outlet/>
         <Footer/>

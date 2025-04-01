@@ -2,6 +2,7 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import {useSelector} from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 
 const dateFormater = (date)=>{
   const months = ["","Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -45,6 +46,7 @@ const handleCancelAppoinment= async (id,setAppoinments) =>{
 const UserAppoinments = () => {
   const authStatus = useSelector((state)=>state.auth.status)
   const [appoinments,setAppoinments] = useState([])
+  const navigate=useNavigate()
 
 
   useEffect(()=>{
@@ -79,6 +81,7 @@ const UserAppoinments = () => {
               </div>
               <div></div>
               <div className='flex flex-col gap-2 justify-end text-sm text-center'>
+                {!item.isCompleted && !item.cancelled && <button onClick={(e)=>navigate('/user/virtual/appointment')} className='sm:min-w-48 py-2 border border-primary rounded text-primary hover:bg-slate-300'>Join</button>}
                 {item.isCompleted && <button className='sm:min-w-48 py-2 border border-green-500 rounded text-green-500'>Completed</button>}
                 {!item.isCompleted && <button className='text-[#696969] sm:min-w-48 py-2 border rounded hover:bg-primary hover:text-white transition-all duration-300'>Pay Online</button>}
                 {item.cancelled && <button className='sm:min-w-48 py-2 border border-red-500 rounded text-red-500'>Appoinment Cancelled</button>}

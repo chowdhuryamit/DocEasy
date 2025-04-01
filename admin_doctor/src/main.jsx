@@ -9,6 +9,8 @@ import App from './App.jsx'
 import { Adddoctor, AllAppoinments, Dashboard, DoctorAppoinments, DoctorDashboard, DoctorProfile, DoctorsList,DoctorDetails,ResetPassword } from './pages/index.js'
 import {Home} from './components/index.js'
 import { ToastContainer } from 'react-toastify';
+import Lobby from './screens/Lobby.jsx'
+import Room from './screens/Room.jsx'
 
 const router = createBrowserRouter([{
     path:'/',
@@ -50,6 +52,14 @@ const router = createBrowserRouter([{
         path:'/doctor-appoinments',
         element:<DoctorAppoinments/>
       },
+      {
+        path:'/doctor/virtual/appointment/',
+        element:<Lobby/>
+      },
+      {
+        path:'/doctor/virtual/appointment/:roomId',
+        element:<Room/>
+      }
     ]
 },
 {
