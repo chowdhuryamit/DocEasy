@@ -9,11 +9,13 @@ This repository contains the backend logic for a Doctor Appointment Booking Web 
 - Browse and search for doctors
 - Book, reschedule, or cancel appointments
 - View appointment history
+- User can join appointment in online mode in the appointment section using room id
 
 ### Doctor
 - Manage availability and schedule
 - View and manage patient appointments
 - Approve or decline appointment requests
+- Doctor can take appointment online mode
 
 ### Admin
 - Manage patients and doctors
